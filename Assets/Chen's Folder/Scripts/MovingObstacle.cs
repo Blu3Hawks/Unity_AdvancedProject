@@ -6,6 +6,7 @@ public class MovingObstacle : MonoBehaviour
     [Header("Speed Variables")]
     [SerializeField] private float movingSpeed;
     [SerializeField] private Vector3 movementVector;
+    [SerializeField] [Min(0.01f)] private float movementFactor;
 
     //differential numbers for moving the platformers
     private Vector3 startingPosition;
@@ -23,7 +24,7 @@ public class MovingObstacle : MonoBehaviour
 
     private void LerpMovement()
     {
-        float cycles = Time.time * movingSpeed;
+        float cycles = Time.time * movingSpeed / movementFactor;
 
         const float tau = Mathf.PI * 2;
         float angle = cycles * tau;
