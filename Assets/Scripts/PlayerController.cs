@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -38,10 +37,9 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started && _isGrounded)
         {
-            // Jump
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
-            Debug.Log("Jumping!");
-        }else if (context.canceled && rb.linearVelocity.y > 0)
+        }
+        else if (context.canceled && rb.linearVelocity.y > 0)
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f, rb.linearVelocity.z);
         }
