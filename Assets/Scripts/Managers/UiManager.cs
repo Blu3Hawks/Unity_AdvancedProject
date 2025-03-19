@@ -15,7 +15,7 @@ namespace Managers
 
         private void SetScoreText(int score)
         {
-            scoreText.text = score.ToString();
+            scoreText.text = score.ToString("D6");
         } 
     }
 }
