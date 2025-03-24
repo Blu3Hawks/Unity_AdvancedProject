@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1909255930546561657}
   - component: {fileID: 3301369091235130844}
   - component: {fileID: 735255501223680278}
-  - component: {fileID: 6979054061044456274}
+  - component: {fileID: 8681704791955288778}
   m_Layer: 0
   m_Name: Building_05_Merge
   m_TagString: Untagged
@@ -59,7 +59,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 257
+  m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2523089892015339754, guid: f702aa75ab8ff2e44a2ad4cbd4ab221e, type: 3}
@@ -87,7 +87,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6979054061044456274
+--- !u!64 &8681704791955288778
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
