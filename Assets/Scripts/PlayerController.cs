@@ -1,4 +1,3 @@
-using System.Collections;
 using PlayerStates;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,10 +6,11 @@ public class PlayerController : MonoBehaviour
 {
     [Header("References")]
     public Rigidbody rb;
+    public Animator animator;
     
     [Header("Forces")]
     public float moveSpeed = 5f;
-    public float jumpForce = 10f;
+    [SerializeField] private float jumpForce = 10f;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
@@ -96,6 +96,11 @@ public class PlayerController : MonoBehaviour
     public bool AttackPressed()
     {
         return _attackAction.triggered;
+    }
+    
+    public void OnJumpAnimation()
+    {
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
     }
 
     // Example attack method.

@@ -8,6 +8,7 @@ namespace PlayerStates
         private const float JumpOffSet = 0.2f;
 
         private Vector2 _input;
+        private static readonly int Jump = Animator.StringToHash("Jump");
 
         public JumpState(PlayerController player) : base(player)
         {
@@ -15,13 +16,13 @@ namespace PlayerStates
 
         public override void EnterState()
         {
-            Player.rb.linearVelocity = new Vector3(Player.rb.linearVelocity.x, Player.jumpForce, Player.rb.linearVelocity.z);
+            Player.animator.SetTrigger(Jump);
             _jumpTimer = JumpOffSet;
         }
 
         public override void ExitState()
         {
-            
+            Player.animator.ResetTrigger(Jump);
         }
 
         public override void HandleInput()

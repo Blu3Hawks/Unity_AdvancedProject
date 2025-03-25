@@ -3913,6 +3913,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 1852780229}
+  animator: {fileID: 1852780232}
   moveSpeed: 3
   jumpForce: 5
   groundCheck: {fileID: 2027470452}
@@ -3922,6 +3923,11 @@ MonoBehaviour:
     m_Bits: 64
   dashSpeed: 10
   dashDuration: 0.2
+--- !u!95 &1852780232 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8832964881147904657, guid: c26e8c19d8cdac1479dfd6f1b18b3864, type: 3}
+  m_PrefabInstance: {fileID: 2120850354}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1852780233 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8832964881147904656, guid: c26e8c19d8cdac1479dfd6f1b18b3864, type: 3}
