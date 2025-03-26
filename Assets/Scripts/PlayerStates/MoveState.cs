@@ -6,7 +6,7 @@ namespace PlayerStates
     {
         private static readonly int IsMoving = Animator.StringToHash("isMoving");
 
-        public MoveState(PlayerController player, Transform camera, Vector2 input) : base(player, camera, input)
+        public MoveState(PlayerController player, Transform camera) : base(player, camera)
         {
         }
 
@@ -28,16 +28,16 @@ namespace PlayerStates
         public override void UpdateState()
         {
             if (Input == Vector2.zero)
-                Player.TransitionToState(new IdleState(Player, Player.cameraTransform, Input));
+                Player.TransitionToState(new IdleState(Player, Player.cameraTransform));
             
             else if (Player.JumpPressed() && Player.IsGrounded())
-                Player.TransitionToState(new JumpState(Player, Player.cameraTransform, Input));
+                Player.TransitionToState(new JumpState(Player, Player.cameraTransform));
             
             else if (Player.DashPressed())
-                Player.TransitionToState(new DashState(Player, Player.cameraTransform, Input));
+                Player.TransitionToState(new DashState(Player, Player.cameraTransform));
             
             else if (Player.AttackPressed())
-                Player.TransitionToState(new AttackState(Player, Player.cameraTransform, Input));
+                Player.TransitionToState(new AttackState(Player, Player.cameraTransform));
         }
 
         public override void FixedUpdateState()

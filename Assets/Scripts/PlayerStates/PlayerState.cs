@@ -8,11 +8,10 @@ namespace PlayerStates
         protected Transform Camera;
         protected Vector2 Input;
 
-        public PlayerState(PlayerController player, Transform camera, Vector2 input)
+        public PlayerState(PlayerController player, Transform camera)
         {
             Player = player;
             Camera = camera;
-            Input = input;
         }
         
         // Called when entering the state

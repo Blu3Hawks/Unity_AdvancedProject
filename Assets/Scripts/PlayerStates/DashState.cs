@@ -6,7 +6,7 @@ namespace PlayerStates
     {
         private float _dashTimeRemaining;
         
-        public DashState(PlayerController player, Transform camera, Vector2 input) : base(player, camera, input)
+        public DashState(PlayerController player, Transform camera) : base(player, camera)
         {
         }
 
@@ -44,7 +44,7 @@ namespace PlayerStates
             
             if (_dashTimeRemaining <= 0)
             {
-                Player.TransitionToState(new MoveState(Player, Player.cameraTransform, Input));
+                Player.TransitionToState(new IdleState(Player, Player.cameraTransform));
             }
         }
 
