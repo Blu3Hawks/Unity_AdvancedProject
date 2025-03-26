@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,18 +9,42 @@ public class Room
     public Vector2Int bottomRightRoomCorner;
     public Vector2Int topLeftRoomCorner;
 
-    public Vector2 centerPoint;
+    private Vector2 centerPoint;
 
-    public int Width { get => (topRightRoomCorner.x - bottomLeftRoomCorner.x); }
-    public int Length { get => (topRightRoomCorner.y - bottomLeftRoomCorner.y); }
+    private List<Room> listOfRoomsToConnect;
+    public List<Room> ListOfRoomsToConnect => listOfRoomsToConnect;
+    public int amountOfRoomsToConnect { get; private set; }
 
-    public Vector2 CenterPoint { get => centerPoint; set => centerPoint = new Vector2Int(bottomLeftRoomCorner.x + Width / 2, bottomLeftRoomCorner.y + Length / 2); }
-    public Room(Vector2Int bottomLeftCorner, Vector2Int topRightCorner)
+    public int Width => (topRightRoomCorner.x - bottomLeftRoomCorner.x);
+    public int Length => (topRightRoomCorner.y - bottomLeftRoomCorner.y);
+
+    public Vector2 CenterPoint => centerPoint;
+
+    public bool CanAddMoreConnections => listOfRoomsToConnect.Count < amountOfRoomsToConnect;
+
+    public Room(Vector2Int bottomLeftCorner, Vector2Int topRightCorner, int amountOfRooms)
     {
         bottomLeftRoomCorner = bottomLeftCorner;
         topRightRoomCorner = topRightCorner;
 
         bottomRightRoomCorner = new Vector2Int(topRightCorner.x, bottomLeftCorner.y);
         topLeftRoomCorner = new Vector2Int(bottomLeftCorner.x, topRightCorner.y);
+
+        amountOfRoomsToConnect = amountOfRooms;
+        listOfRoomsToConnect = new List<Room>();
+
+        centerPoint = new Vector2(bottomLeftRoomCorner.x + Width / 2f, bottomLeftRoomCorner.y + Length / 2f);
+    }
+
+    public bool IsConnectedToGivenRoom(Room room)
+    {
+        return room != this &&
+               !listOfRoomsToConnect.Contains(room) &&
+               listOfRoomsToConnect.Count < amountOfRoomsToConnect;
+    }
+
+    public void AddRoomToList(Room room)
+    {
+        listOfRoomsToConnect.Add(room);
     }
 }

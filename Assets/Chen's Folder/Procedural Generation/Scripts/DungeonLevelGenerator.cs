@@ -1,70 +1,139 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using random = UnityEngine.Random;
 
 public class DungeonLevelGenerator : MonoBehaviour
 {
     [Header("Level Values")]
-    [Header("Level Width")]
-    // min and max level width with a local variable of the actual width
     [SerializeField] private int minLevelWidth;
     [SerializeField] private int maxLevelWidth;
     private int levelWidth;
-    [Header("Level Length")]
-    // min and max level length with a local variable of the actual length
+
     [SerializeField] private int minLevelLength;
     [SerializeField] private int maxLevelLength;
     private int levelLength;
-    [Header("Level Iterations")]
-    // min and max iterations - how many divides will be in the total space given with a local variable of the actual iterations
+
     [SerializeField] private int minIterations;
     [SerializeField] private int maxIterations;
     private int levelIterations;
 
     [Header("Room Values")]
-    //track the amount of rooms that we have and also their min and max values for their size
-    [Header("Room Width")]
     [SerializeField] private int minRoomWidth;
     [SerializeField] private int maxRoomWidth;
-    [Header("Room Length")]
+
     [SerializeField] private int minRoomLength;
     [SerializeField] private int maxRoomLength;
-    [Header("List of Room")]
+
+    [Header("Hallway Values")]
+    [SerializeField] private int hallwayWidth;
+    [SerializeField] private GameObject hallwayPrefab;
 
     [SerializeField] private GameObject planePrefab;
     [SerializeField] private GameObject roomPlanePrefab;
 
-    SpaceDivider spaceDivider;
+    [Header("Walls Values")]
+    [SerializeField] private GameObject wallPrefab;
 
+    [Header("Seed")]
+    [SerializeField] private int seed;
+    [SerializeField] private bool useRandomSeed = true;
+
+    private SpaceDivider spaceDivider;
     private List<Room> listOfRooms = new List<Room>();
+    private List<Hallway> listOfHallways = new List<Hallway>();
 
-    public List<SpaceArea> spacesToDivide = new List<SpaceArea>();
-    public List<SpaceArea> spacesToPrint = new List<SpaceArea>();
+    private RoomConnector roomConnector;
+    private WallsInitializer wallsInitializer;
+
+    private Transform spacesParent;
+    private Transform roomsParent;
+    private Transform hallwaysParent;
+    private Transform wallParent;
+
     public void GenerateLevel()
     {
         ClearWorld();
         GenerateRandomLevelValues();
         spaceDivider = new SpaceDivider(levelWidth, levelLength, levelIterations, maxRoomWidth, maxRoomLength);
-        GenerateAllSpaces();
+        spaceDivider.GenerateAllSpaces();
 
-        Debug.Log("The width is: " + levelWidth + " and the length is: " + levelLength);
+        foreach (SpaceArea space in spaceDivider.SpacesToPrint)
+        {
+            GenerateRoom(space);
+        }
+
+        roomConnector = new RoomConnector(listOfRooms);
 
         CreatePlanesForSpaces();
         CreatePlanesForRooms();
-        Debug.Log(spaceDivider.spacesToPrint.Count.ToString());
+        CreatePlanesForHallways(roomConnector);
+
+        wallsInitializer = new WallsInitializer();
+        foreach (Room room in listOfRooms)
+        {
+            wallsInitializer.SetupWallsForRoom(room, 0.5f);
+            CreateWallsForRooms();
+        }
+
+        foreach (Hallway hallway in listOfHallways)
+        {
+            wallsInitializer.SetupWallsForHallway(hallway, 0.5f);
+            CreateWallsForHallways();
+        }
     }
 
     private void GenerateRandomLevelValues()
     {
-        levelWidth = UnityEngine.Random.Range(minLevelWidth, maxLevelWidth);
-        levelLength = UnityEngine.Random.Range(minLevelLength, maxLevelLength);
-        levelIterations = UnityEngine.Random.Range(minIterations, maxIterations);
+        if (useRandomSeed)
+        {
+            seed = random.Range(int.MinValue, int.MaxValue);
+        }
+        random.InitState(seed);
+
+        levelWidth = random.Range(minLevelWidth, maxLevelWidth);
+        levelLength = random.Range(minLevelLength, maxLevelLength);
+        levelIterations = random.Range(minIterations, maxIterations);
+    }
+
+    private void CreateWallsForHallways()
+    {
+        foreach (Vector2 wallPosition in wallsInitializer.ListOfWallsForHallways)
+        {
+            if (wallPrefab == null)
+            {
+                Debug.LogError("Wall prefab is not assigned!");
+                return;
+            }
+            Vector3 adjustedPosition = new Vector3(wallPosition.x, 1, wallPosition.y);
+
+            GameObject wall = Instantiate(wallPrefab, wallParent);
+
+            wall.transform.position = adjustedPosition;
+        }
+    }
+
+    private void CreateWallsForRooms()
+    {
+        foreach (Vector2 wallPosition in wallsInitializer.ListOfWallsForRooms)
+        {
+            if (wallPrefab == null)
+            {
+                Debug.LogError("Wall prefab is not assigned!");
+                return;
+            }
+            Vector3 adjustedPosition = new Vector3(wallPosition.x, 1, wallPosition.y);
+
+            GameObject wall = Instantiate(wallPrefab, wallParent);
+
+            wall.transform.position = adjustedPosition;
+        }
     }
 
     private void CreatePlanesForSpaces()
     {
-        foreach (SpaceArea space in spacesToPrint)
+        foreach (SpaceArea space in spaceDivider.SpacesToPrint)
         {
             if (planePrefab == null)
             {
@@ -72,7 +141,7 @@ public class DungeonLevelGenerator : MonoBehaviour
                 return;
             }
 
-            GameObject plane = Instantiate(planePrefab, transform);
+            GameObject plane = Instantiate(planePrefab, spacesParent);
 
             Vector3 position = new Vector3(
                 (space.bottomLeftSpaceCorner.x + space.topRightSpaceCorner.x) / 2f,
@@ -95,16 +164,13 @@ public class DungeonLevelGenerator : MonoBehaviour
     {
         foreach (Room room in listOfRooms)
         {
-            if (planePrefab == null)
+            if (roomPlanePrefab == null)
             {
-                Debug.LogError("Plane prefab is not assigned!");
+                Debug.LogError("Room plane prefab is not assigned!");
                 return;
             }
 
-            GameObject plane = Instantiate(roomPlanePrefab, transform);
-            Material material = plane.GetComponent<Material>();
-
-            // material.color = new Color(UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255), UnityEngine.Random.Range(0, 255));
+            GameObject roomPlane = Instantiate(roomPlanePrefab, roomsParent);
 
             Vector3 position = new Vector3(
                 (room.bottomLeftRoomCorner.x + room.topRightRoomCorner.x) / 2f,
@@ -118,188 +184,153 @@ public class DungeonLevelGenerator : MonoBehaviour
                 room.Length / 10f
             );
 
-            plane.transform.position = position;
-            plane.transform.localScale = scale;
+            roomPlane.transform.position = position;
+            roomPlane.transform.localScale = scale;
         }
     }
 
     public void GenerateRoom(SpaceArea givenSpace)
     {
-        int randomRoomWidth = UnityEngine.Random.Range(minRoomWidth, maxRoomLength);
-        int randomRoomLength = UnityEngine.Random.Range(minRoomLength, maxRoomLength);
+        int randomRoomWidth = random.Range(minRoomWidth, maxRoomWidth);
+        int randomRoomLength = random.Range(minRoomLength, maxRoomLength);
 
         Vector2Int newBottomLeftCorner = new Vector2Int(
-            UnityEngine.Random.Range( //this is the random X value of the bottom left corner
-            givenSpace.bottomLeftSpaceCorner.x + 1, givenSpace.bottomRightSpaceCorner.x - 1 - randomRoomWidth),
-            UnityEngine.Random.Range( //this is the random Y value of the bottom left corner
-            givenSpace.bottomLeftSpaceCorner.y + 1, givenSpace.topLeftSpaceCorner.y - 1 - randomRoomLength)
-            );
-        //now we calculate the top right corner
+            random.Range(givenSpace.bottomLeftSpaceCorner.x + 1, givenSpace.bottomRightSpaceCorner.x - 1 - randomRoomWidth),
+            random.Range(givenSpace.bottomLeftSpaceCorner.y + 1, givenSpace.topLeftSpaceCorner.y - 1 - randomRoomLength)
+        );
 
         Vector2Int newTopRightCorner = new Vector2Int(
             newBottomLeftCorner.x + randomRoomWidth,
-            newBottomLeftCorner.y + randomRoomLength);
+            newBottomLeftCorner.y + randomRoomLength
+        );
 
-        Room newRoom = new Room(newBottomLeftCorner, newTopRightCorner);
+        int randomAmountOfRoomsToConnect = random.Range(1, 4);
+
+        Room newRoom = new Room(newBottomLeftCorner, newTopRightCorner, randomAmountOfRoomsToConnect);
         listOfRooms.Add(newRoom);
     }
 
-    public void GenerateAllSpaces()
+    private void CreatePlanesForHallways(RoomConnector roomConnector)
     {
-        // getting the firt space here - then dividing it for the amount of iterations, each time creating new spaces, that are on a list - after dividing remove them from the list. each time
-        // check a random space to divide until run out of divisions/ iterations or running out of space to divide.
-        SpaceArea firstSpace = new SpaceArea(new Vector2Int(0, 0), new Vector2Int(levelWidth, levelLength));
-        spacesToDivide.Add(firstSpace);
-        int currentIteration = 0;
+        //have a hashset for the pairs of rooms, so every 2 rooms that are connected considered paired
+        HashSet<(Room, Room)> connectedPairs = new HashSet<(Room, Room)>();
 
-        while (currentIteration < levelIterations && spacesToDivide.Count > 0)
+        foreach (Room room in listOfRooms)
         {
-            int randomSpaceToDivide = UnityEngine.Random.Range(0, spacesToDivide.Count);
-            SpaceArea spaceToCheck = spacesToDivide[randomSpaceToDivide];
-
-            if (CheckForSpaceDivisionXAxis(spaceToCheck) && CheckForSpaceDivisionYAxis(spaceToCheck) && spacesToDivide.Contains(spaceToCheck))
+            foreach (Room connected in room.ListOfRoomsToConnect)
             {
-                //if both options are available then I want it to be randomized.
-                if (UnityEngine.Random.Range(0, 2) == 0)
-                {
-                    DivideSpaceXAxis(spaceToCheck);
-                }
-                else
-                {
-                    DivideSpaceYAxis(spaceToCheck);
-                }
-                currentIteration++;
-            }
-            else if (CheckForSpaceDivisionXAxis(spaceToCheck))
-            {
-                DivideSpaceXAxis(spaceToCheck);
-                currentIteration++;
-            }
-            else if (CheckForSpaceDivisionYAxis(spaceToCheck))
-            {
-                DivideSpaceYAxis(spaceToCheck);
-                currentIteration++;
-            }
-            else
-            {
-                spacesToDivide.Remove(spaceToCheck);
-                spacesToPrint.Add(spaceToCheck);
-                continue;
-            }
-        }
+                //make sure we don't repeat the same rooms
+                if (connectedPairs.Contains((connected, room)) || connectedPairs.Contains((room, connected)))
+                    continue;
 
-
-        //now after the while loop is broken we can add the remaining spaces to the list that we print out - our final spaces
-        foreach (SpaceArea space in spacesToDivide)
-        {
-            spacesToPrint.Add(space);
-        }
-
-        foreach (SpaceArea space in spacesToPrint)
-        {
-            GenerateRoom(space);
+                //add them to the hashset and instantiate
+                connectedPairs.Add((room, connected));
+                InstantiateHallwayBetweenRooms(room, connected, roomConnector);
+            }
         }
     }
 
-
-    private void DivideSpaceXAxis(SpaceArea spaceToCheck)
+    private void InstantiateHallwayBetweenRooms(Room roomA, Room roomB, RoomConnector roomConnector)
     {
-        //first we remove it from the list
-        spacesToDivide.Remove(spaceToCheck);
-        // take the total width - between the min x value + (max room length + 1) and the max x value - (max room length +1)
+        //check starting and lasting rooms' center points
+        Vector2 startPoint = roomConnector.GetClosestSidePoint(roomA, roomB.CenterPoint);
+        Vector2 endPoint = roomConnector.GetClosestSidePoint(roomB, roomA.CenterPoint);
 
-        int randomXValue = UnityEngine.Random.Range(
-            spaceToCheck.bottomLeftSpaceCorner.x + (maxRoomWidth + 1),
-            spaceToCheck.bottomRightSpaceCorner.x - (maxRoomWidth + 1)
-            );
-
-        if (randomXValue <= spaceToCheck.bottomLeftSpaceCorner.x || randomXValue >= spaceToCheck.topRightSpaceCorner.x)
-        {
-            Debug.LogWarning("Invalid X-axis division point. Skipping this space.");
-            return;
-        }
-        //now we create two new spaces - the first one, that will be the left part of the divided space, will be having the bottom left and top left corners,
-        //combined with two new points - the top right would be the top left + the newXValue and the bottom right will be the bottom left + newXValue
-
-        SpaceArea newSpaceLeftSide = new SpaceArea(
-            spaceToCheck.bottomLeftSpaceCorner,
-            new Vector2Int(randomXValue,
-            spaceToCheck.topRightSpaceCorner.y)
-            );
-        //next we will take the other side and make a space out of it - so we will take the middle values, which are the previous space that we have created - we will take its right points
-        //as our left points for the new space, and the right points would be the given space right points. Watch the files to get a better understanding for the divisions.
-
-        //we can use the new space on the left - and take its bottom right point, and the given space's top right point to create this new space. That totally works.
-
-        SpaceArea newSpaceRightSide = new SpaceArea(
-            new Vector2Int(randomXValue, spaceToCheck.bottomLeftSpaceCorner.y),
-            spaceToCheck.topRightSpaceCorner
-            );
-        //now we will add these two spaces to the list
-
-        spacesToDivide.Add(newSpaceLeftSide);
-        spacesToDivide.Add(newSpaceRightSide);
+        //start by horizontally instantiation
+        Vector2 horizontal = new Vector2(endPoint.x, startPoint.y);
+        SpawnHallway(startPoint, horizontal);
+        //then move vertically
+        Vector2 vertical = endPoint;
+        SpawnHallway(horizontal, vertical);
     }
 
-    private void DivideSpaceYAxis(SpaceArea spaceToCheck)
+    //here we get a start point and an end point, by getting these values,
+    //we ensure that we will be moving properly horizontally first and then vertically
+    private void SpawnHallway(Vector2 startPoint, Vector2 endPoint)
     {
-        spacesToDivide.Remove(spaceToCheck);
-        //take the total length and randomise between the min y value + max room length + 1 and the max y value - (max room length +1)
-
-        int randomYValue = UnityEngine.Random.Range(
-            spaceToCheck.bottomLeftSpaceCorner.y + (maxRoomLength + 1),
-            spaceToCheck.topLeftSpaceCorner.y - (maxRoomWidth + 1)
-            );
-
-        if (randomYValue <= spaceToCheck.bottomLeftSpaceCorner.y || randomYValue >= spaceToCheck.topRightSpaceCorner.y)
+        if (hallwayPrefab == null)
         {
-            Debug.LogWarning("Invalid Y-axis division point. Skipping this space.");
+            Debug.LogError("Hallway prefab not assigned!");
             return;
         }
 
-        //now we can create two new spaced - the upper space and bottom. first we make the upper one, so we will make the upper one first
-        //it will have the top left and top right corners and then the new bottom left and bottom right points would be
-        //the original bottom left and right corners + the new Y Value given.
+        Vector2 midPoint = (startPoint + endPoint) / 2;
+        Vector2 direction = endPoint - startPoint;
+        float length = direction.magnitude;
 
-        SpaceArea newSpaceDownSide = new SpaceArea(
-            spaceToCheck.bottomLeftSpaceCorner,
-            new Vector2Int(spaceToCheck.bottomRightSpaceCorner.x, randomYValue)
-            );
-        //now we do the same with the new space at the bottom
+        Vector3 position = new Vector3(midPoint.x, 1f, midPoint.y);
+        Vector3 scale;
 
-        SpaceArea newSpaceUpSide = new SpaceArea(
-            newSpaceDownSide.topLeftSpaceCorner,
-            spaceToCheck.topRightSpaceCorner
-            );
-        //now we will add these two spaces to the list
+        //check the direction that we will be facing, and scale it properly towards where we're heading
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+        {
+            scale = new Vector3(length / 10f, 1f, hallwayWidth / 10f);
+        }
+        else
+        {
+            scale = new Vector3(hallwayWidth / 10f, 1f, length / 10f);
+        }
 
-        spacesToDivide.Add(newSpaceUpSide);
-        spacesToDivide.Add(newSpaceDownSide);
-    }
+        //instantiate the hallway GameObject
+        GameObject hallwayObject = Instantiate(hallwayPrefab, position, Quaternion.identity, hallwaysParent);
+        hallwayObject.transform.localScale = scale;
 
-
-    private bool CheckForSpaceDivisionXAxis(SpaceArea spaceToCheck)
-    {
-        return spaceToCheck.Width > (maxRoomWidth + 1) * 2;
-    }
-
-    private bool CheckForSpaceDivisionYAxis(SpaceArea spaceToCheck)
-    {
-        return spaceToCheck.Length > (maxRoomLength + 1) * 2;
+        //Create hallway and add it to the list of hallways
+        Vector2Int bottomLeftCorner = Vector2Int.RoundToInt(startPoint);
+        Vector2Int topRightCorner = Vector2Int.RoundToInt(endPoint);
+        Hallway newHallway = new Hallway(bottomLeftCorner, topRightCorner, 1); // Assuming 1 connection for simplicity
+        listOfHallways.Add(newHallway);
     }
 
     private void ClearWorld()
     {
-        Console.Clear();
-        while (transform.childCount != 0)
+        if (spacesParent != null)
         {
-            foreach (Transform item in transform)
+            foreach (Transform child in spacesParent)
             {
-                DestroyImmediate(item.gameObject);
+                DestroyImmediate(child.gameObject);
             }
+            DestroyImmediate(spacesParent.gameObject);
         }
-        spacesToDivide.Clear();
-        spacesToPrint.Clear();
+
+        if (roomsParent != null)
+        {
+            foreach (Transform child in roomsParent)
+            {
+                DestroyImmediate(child.gameObject);
+            }
+            DestroyImmediate(roomsParent.gameObject);
+        }
+
+        if (hallwaysParent != null)
+        {
+            foreach (Transform child in hallwaysParent)
+            {
+                DestroyImmediate(child.gameObject);
+            }
+            DestroyImmediate(hallwaysParent.gameObject);
+        }
+
+        if (wallParent != null)
+        {
+            foreach (Transform child in wallParent)
+            {
+                DestroyImmediate(child.gameObject);
+            }
+            DestroyImmediate(wallParent.gameObject);
+        }
+
+        spacesParent = new GameObject("Spaces").transform;
+        roomsParent = new GameObject("Rooms").transform;
+        hallwaysParent = new GameObject("Hallways").transform;
+        wallParent = new GameObject("Walls").transform;
+
+        spacesParent.SetParent(transform);
+        roomsParent.SetParent(transform);
+        hallwaysParent.SetParent(transform);
+        wallParent.SetParent(transform);
+
         listOfRooms.Clear();
+        listOfHallways.Clear();
     }
 }
