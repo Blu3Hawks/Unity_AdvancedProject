@@ -144,5 +144,4 @@ public class RoomConnector
 
         return closestPoint;
     }
-
 }

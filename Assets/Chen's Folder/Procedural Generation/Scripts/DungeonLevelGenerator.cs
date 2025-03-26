@@ -27,7 +27,7 @@ public class DungeonLevelGenerator : MonoBehaviour
     [SerializeField] private int maxRoomLength;
 
     [Header("Hallway Values")]
-    [SerializeField] private int hallwayWidth;
+    [SerializeField] private float hallwayWidth;
     [SerializeField] private GameObject hallwayPrefab;
 
     [SerializeField] private GameObject planePrefab;
@@ -43,6 +43,7 @@ public class DungeonLevelGenerator : MonoBehaviour
     private SpaceDivider spaceDivider;
     private List<Room> listOfRooms = new List<Room>();
     private List<Hallway> listOfHallways = new List<Hallway>();
+    private List<GameObject> listOfHallwaysObjects = new List<GameObject>();
 
     private RoomConnector roomConnector;
     private WallsInitializer wallsInitializer;
@@ -73,14 +74,27 @@ public class DungeonLevelGenerator : MonoBehaviour
         wallsInitializer = new WallsInitializer();
         foreach (Room room in listOfRooms)
         {
-            wallsInitializer.SetupWallsForRoom(room, 0.5f);
+            wallsInitializer.SetupWallsForRoom(room, 1f);
+            wallsInitializer.RemoveAllOverlappingWalls(listOfRooms, listOfHallwaysObjects);
             CreateWallsForRooms();
+
         }
 
-        foreach (Hallway hallway in listOfHallways)
+        foreach (GameObject hallwayObject in listOfHallwaysObjects)
         {
-            wallsInitializer.SetupWallsForHallway(hallway, 0.5f);
+            wallsInitializer.SetupWallsForHallway(hallwayObject, 1f, listOfRooms, listOfHallways);
+            wallsInitializer.RemoveAllOverlappingWalls(listOfRooms, listOfHallwaysObjects);
             CreateWallsForHallways();
+        }
+
+
+        //we will check if, somehow, we have a room with no connections
+        foreach (Room room in listOfRooms)
+        {
+            if (room.amountOfRoomsToConnect <= 0)
+            {
+                GenerateLevel();
+            }
         }
     }
 
@@ -258,27 +272,28 @@ public class DungeonLevelGenerator : MonoBehaviour
         Vector2 direction = endPoint - startPoint;
         float length = direction.magnitude;
 
-        Vector3 position = new Vector3(midPoint.x, 1f, midPoint.y);
+        Vector3 position = new Vector3(midPoint.x, 0.9f, midPoint.y);
         Vector3 scale;
 
         //check the direction that we will be facing, and scale it properly towards where we're heading
         if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
         {
-            scale = new Vector3(length / 10f, 1f, hallwayWidth / 10f);
+            scale = new Vector3(length / 9.3f, 1f, hallwayWidth / 9.3f);
         }
         else
         {
-            scale = new Vector3(hallwayWidth / 10f, 1f, length / 10f);
+            scale = new Vector3(hallwayWidth / 9.3f, 1f, length / 9.3f);
         }
 
         //instantiate the hallway GameObject
         GameObject hallwayObject = Instantiate(hallwayPrefab, position, Quaternion.identity, hallwaysParent);
         hallwayObject.transform.localScale = scale;
+        listOfHallwaysObjects.Add(hallwayObject);
 
         //Create hallway and add it to the list of hallways
         Vector2Int bottomLeftCorner = Vector2Int.RoundToInt(startPoint);
         Vector2Int topRightCorner = Vector2Int.RoundToInt(endPoint);
-        Hallway newHallway = new Hallway(bottomLeftCorner, topRightCorner, 1); // Assuming 1 connection for simplicity
+        Hallway newHallway = new Hallway(bottomLeftCorner, topRightCorner);
         listOfHallways.Add(newHallway);
     }
 
@@ -332,5 +347,6 @@ public class DungeonLevelGenerator : MonoBehaviour
 
         listOfRooms.Clear();
         listOfHallways.Clear();
+        listOfHallwaysObjects.Clear();
     }
 }
