@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public Animator animator;
     public Transform cameraTransform;
     public AnimationClip attackAnimation;
+    public Weapon weapon;
     
     [Header("Forces")]
     public float moveSpeed = 5f;
@@ -63,7 +64,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        _currentState = new IdleState(this, cameraTransform, Vector2.zero);
+        _currentState = new IdleState(this, cameraTransform);
         _currentState.EnterState();
     }
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace PlayerStates
@@ -9,7 +10,7 @@ namespace PlayerStates
         private float _attackDuration;
         private bool _attackComplete;
 
-        public AttackState(PlayerController player, Transform camera, Vector2 input) : base(player, camera, input)
+        public AttackState(PlayerController player, Transform camera) : base(player, camera)
         {
             _attackAnimation = Player.attackAnimation;
         }
@@ -18,11 +19,14 @@ namespace PlayerStates
         {
             Player.animator.SetTrigger(Attack);
             _attackDuration = _attackAnimation.length;
+            Player.weapon.EnableCollider();
+            Player.StartCoroutine(EndOfAttack());
         }
 
         public override void ExitState()
         {
             Player.animator.ResetTrigger(Attack);
+            Player.weapon.DisableCollider();
         }
 
         public override void HandleInput()
@@ -32,18 +36,19 @@ namespace PlayerStates
 
         public override void UpdateState()
         {
-            _attackDuration -= Time.deltaTime;
-
-            if (_attackDuration <= 0)
-                _attackComplete = true;
             
-            if(_attackComplete)
-                Player.TransitionToState(new IdleState(Player, Player.cameraTransform, Input));
         }
 
         public override void FixedUpdateState()
         {
             
+        }
+
+        private IEnumerator EndOfAttack()
+        {
+            yield return new WaitForSeconds(_attackDuration);
+            
+            Player.TransitionToState(new IdleState(Player, Player.cameraTransform));
         }
     }
 }
