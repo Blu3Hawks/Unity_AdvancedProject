@@ -61,22 +61,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39bf872adca1845489dd22807027f557, type: 3}
---- !u!1 &5023624098589915223 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 39bf872adca1845489dd22807027f557, type: 3}
-  m_PrefabInstance: {fileID: 5293442952348435718}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &8131819264050807671
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5023624098589915223}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 5039449802923059475, guid: 39bf872adca1845489dd22807027f557, type: 3}

@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 771919072410199654}
-  - component: {fileID: 4402747864922778051}
-  - component: {fileID: 1944786011544624393}
-  - component: {fileID: 3966584749814107601}
+  - component: {fileID: 4797669893144153557}
+  - component: {fileID: 5252719766736899707}
+  - component: {fileID: 9179950489218202498}
   m_Layer: 0
   m_Name: Building_04_Merge
   m_TagString: Untagged
@@ -34,7 +34,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!33 &4402747864922778051
+--- !u!33 &4797669893144153557
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 143474047721389276}
   m_Mesh: {fileID: -1175145187927157989, guid: 88493e63b976e7c49a755227fd36f116, type: 3}
---- !u!23 &1944786011544624393
+--- !u!23 &5252719766736899707
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,7 +59,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 257
+  m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 7053894945920296599, guid: 88493e63b976e7c49a755227fd36f116, type: 3}
@@ -85,7 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3966584749814107601
+--- !u!64 &9179950489218202498
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
