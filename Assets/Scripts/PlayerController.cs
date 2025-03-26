@@ -1,16 +1,20 @@
 using PlayerStates;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("References")]
     public Rigidbody rb;
     public Animator animator;
+    public Transform cameraTransform;
+    public AnimationClip attackAnimation;
     
     [Header("Forces")]
     public float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 10f;
+    public float speedRotation = 10f;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
@@ -21,15 +25,19 @@ public class PlayerController : MonoBehaviour
     public float dashSpeed = 15f;
     public float dashDuration = 0.2f;
     
-    
+    // Player state
     private PlayerState _currentState;
+    
+    // Input controls
     private PlayerControls _controls;
     
+    // Input Action
     private InputAction _moveAction;
     private InputAction _jumpAction;
     private InputAction _dashAction;
     private InputAction _attackAction;
     
+    // Move input and is dashing bool
     private Vector2 _moveInput;
     private bool _isDashing;
 
@@ -55,13 +63,12 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        _currentState = new MoveState(this);
+        _currentState = new IdleState(this, cameraTransform, Vector2.zero);
         _currentState.EnterState();
     }
 
     private void Update()
     {
-        // Let the current state handle its input and update logic.
         _currentState.HandleInput();
         _currentState.UpdateState();
     }
@@ -82,6 +89,11 @@ public class PlayerController : MonoBehaviour
         _currentState = newState;
         _currentState.EnterState();
     }
+
+    public bool MovePressed()
+    {
+        return _moveAction.triggered || _moveAction.inProgress;
+    }
     
     public bool JumpPressed()
     {
@@ -98,26 +110,13 @@ public class PlayerController : MonoBehaviour
         return _attackAction.triggered;
     }
     
+    // This function called by the animator - Jump Animation event.
     public void OnJumpAnimation()
     {
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
     }
-
-    // Example attack method.
-    public void Attack()
-    {
-        Debug.Log("Attacking...");
-        // Insert attack logic and animation triggers here.
-    }
-
-    // Placeholder for attack completion.
-    public bool AttackComplete()
-    {
-        // Replace with actual attack completion condition.
-        return true;
-    }
     
-    // Wrap your input reading for movement.
+    // Read input reading for movement.
     public Vector2 GetMoveInput()
     {
         return _controls.Player.Move.ReadValue<Vector2>();

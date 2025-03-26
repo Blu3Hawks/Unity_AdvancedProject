@@ -6,7 +6,7 @@ namespace PlayerStates
     {
         private float _dashTimeRemaining;
         
-        public DashState(PlayerController player) : base(player)
+        public DashState(PlayerController player, Transform camera, Vector2 input) : base(player, camera, input)
         {
         }
 
@@ -15,16 +15,16 @@ namespace PlayerStates
             _dashTimeRemaining = Player.dashDuration;
             
             // Get the dash direction from input.
-            var input = Player.GetMoveInput();
+            Input = Player.GetMoveInput();
             
-            if (input == Vector2.zero)
+            if (Input == Vector2.zero)
             {
                 // If no input, dash in player's forward direction.
-                input = new Vector2(Player.transform.forward.x, Player.transform.forward.z);
+                Input = new Vector2(Player.transform.forward.x, Player.transform.forward.z);
             }
             
             // Convert input to a world space dash direction relative to the player.
-            var dashMovement = new Vector3(input.x, 0f, input.y) * Player.dashSpeed;
+            var dashMovement = new Vector3(Input.x, 0f, Input.y) * Player.dashSpeed;
             Player.rb.linearVelocity = new Vector3(dashMovement.x, Player.rb.linearVelocity.y, dashMovement.z);
         }
 
@@ -35,7 +35,7 @@ namespace PlayerStates
 
         public override void HandleInput()
         {
-            
+            Input = Player.GetMoveInput();
         }
 
         public override void UpdateState()
@@ -44,7 +44,7 @@ namespace PlayerStates
             
             if (_dashTimeRemaining <= 0)
             {
-                Player.TransitionToState(new MoveState(Player));
+                Player.TransitionToState(new MoveState(Player, Player.cameraTransform, Input));
             }
         }
 

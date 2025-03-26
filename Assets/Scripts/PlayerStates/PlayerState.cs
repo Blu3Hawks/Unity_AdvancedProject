@@ -1,13 +1,18 @@
+using UnityEngine;
 
 namespace PlayerStates
 {
     public abstract class PlayerState
     {
         protected PlayerController Player;
+        protected Transform Camera;
+        protected Vector2 Input;
 
-        public PlayerState(PlayerController player)
+        public PlayerState(PlayerController player, Transform camera, Vector2 input)
         {
             Player = player;
+            Camera = camera;
+            Input = input;
         }
         
         // Called when entering the state
