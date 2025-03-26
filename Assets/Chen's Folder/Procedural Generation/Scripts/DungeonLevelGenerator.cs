@@ -44,7 +44,10 @@ public class DungeonLevelGenerator : MonoBehaviour
     [SerializeField] private int seed;
     [SerializeField] private bool useRandomSeed = true;
 
+    //references
     private SpaceDivider spaceDivider;
+
+    //private lists
     private List<Room> listOfRooms = new List<Room>();
     private List<Hallway> listOfHallways = new List<Hallway>();
     private List<GameObject> listOfHallwaysObjects = new List<GameObject>();
@@ -52,10 +55,17 @@ public class DungeonLevelGenerator : MonoBehaviour
     private RoomConnector roomConnector;
     private WallsInitializer wallsInitializer;
 
+    //parent objects
     private Transform spacesParent;
     private Transform roomsParent;
     private Transform hallwaysParent;
     private Transform wallParent;
+
+    //local objects
+    private Room currentEntryObject;
+
+    //properties
+    public Room EntryPoint { get { return currentEntryObject; } } //the player will access it - and spawn on top of it
 
     public void GenerateLevel()
     {
@@ -126,7 +136,8 @@ public class DungeonLevelGenerator : MonoBehaviour
                 Debug.LogError("Wall prefab is not assigned!");
                 return;
             }
-            Vector3 adjustedPosition = new Vector3(wallPosition.x, 1, wallPosition.y);
+            float yScale = wallPrefab.transform.localScale.y;
+            Vector3 adjustedPosition = new Vector3(wallPosition.x, yScale / 2, wallPosition.y);
 
             GameObject wall = Instantiate(wallPrefab, wallParent);
 
@@ -143,7 +154,9 @@ public class DungeonLevelGenerator : MonoBehaviour
                 Debug.LogError("Wall prefab is not assigned!");
                 return;
             }
-            Vector3 adjustedPosition = new Vector3(wallPosition.x, 1, wallPosition.y);
+
+            float yScale = wallPrefab.transform.localScale.y;
+            Vector3 adjustedPosition = new Vector3(wallPosition.x, yScale / 2, wallPosition.y);
 
             GameObject wall = Instantiate(wallPrefab, wallParent);
 
@@ -327,7 +340,6 @@ public class DungeonLevelGenerator : MonoBehaviour
         //now we will decide where to place the entry point and exit point. both will be in the middle of the room
         Instantiate(entryPoint, new Vector3(entryRoom.CenterPoint.x, 1f, entryRoom.CenterPoint.y), Quaternion.identity, roomsParent);
         Instantiate(exitPoint, new Vector3(exitRoom.CenterPoint.x, 1f, exitRoom.CenterPoint.y), Quaternion.identity, roomsParent);
-
     }
 
 
