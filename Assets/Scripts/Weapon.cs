@@ -7,7 +7,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float damage = 10f;
     [SerializeField] private Collider weaponCollider;
 
-    private HashSet<EnemyController> _hitEnemies = new ();
+    private HashSet<Enemy.Enemy> _hitEnemies = new ();
 
     private void Start()
     {
@@ -29,13 +29,13 @@ public class Weapon : MonoBehaviour
     {
         if (!other.CompareTag("Enemy")) return;
 
-        var enemy = other.GetComponent<EnemyController>();
+        var enemy = other.GetComponent<Enemy.Enemy>();
 
         if (enemy)
         {
             if (!_hitEnemies.Contains(enemy))
             {
-                enemy.enemy.TakeDamage(damage);
+                enemy.TakeDamage(damage);
                 _hitEnemies.Add(enemy);
                 Debug.Log("Enemy Hit!");
             }

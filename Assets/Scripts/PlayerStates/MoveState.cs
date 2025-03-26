@@ -59,8 +59,11 @@ namespace PlayerStates
             Player.rb.linearVelocity = moveDir * Player.moveSpeed + new Vector3(0f, Player.rb.linearVelocity.y, 0f);
             
             // Rotate the player the way the camera is facing
-            var targetRotation = Quaternion.LookRotation(moveDir);
-            Player.transform.rotation = Quaternion.Slerp(Player.transform.rotation, targetRotation, Player.speedRotation * Time.deltaTime);
+            if (moveDir != Vector3.zero)
+            {
+                var targetRotation = Quaternion.LookRotation(moveDir);
+                Player.transform.rotation = Quaternion.Slerp(Player.transform.rotation, targetRotation, Player.speedRotation * Time.deltaTime);
+            }
         }
     }
 }
