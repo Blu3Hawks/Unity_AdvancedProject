@@ -100,6 +100,8 @@ public class DungeonLevelGenerator : MonoBehaviour
                 GenerateLevel();
             }
         }
+
+        DeclareStartingAndExitRooms();
     }
 
     private void GenerateRandomLevelValues()
@@ -311,7 +313,21 @@ public class DungeonLevelGenerator : MonoBehaviour
         Room exitRoom;
 
         List<Room> allRooms = listOfRooms;
-        
+        int randomEntryRoomIndex = random.Range(0, allRooms.Count);
+        int randomExitRoomIndex = random.Range(0, allRooms.Count);
+
+        while(randomEntryRoomIndex == randomExitRoomIndex)
+        {
+            randomExitRoomIndex = random.Range(0, allRooms.Count);
+        }
+
+        entryRoom = allRooms[randomEntryRoomIndex];
+        exitRoom = allRooms[randomExitRoomIndex];
+
+        //now we will decide where to place the entry point and exit point. both will be in the middle of the room
+        Instantiate(entryPoint, new Vector3(entryRoom.CenterPoint.x, 1f, entryRoom.CenterPoint.y), Quaternion.identity, roomsParent);
+        Instantiate(exitPoint, new Vector3(exitRoom.CenterPoint.x, 1f, exitRoom.CenterPoint.y), Quaternion.identity, roomsParent);
+
     }
 
 
