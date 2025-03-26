@@ -36,6 +36,10 @@ public class DungeonLevelGenerator : MonoBehaviour
     [Header("Walls Values")]
     [SerializeField] private GameObject wallPrefab;
 
+    [Header("Start & End point")]
+    [SerializeField] private GameObject entryPoint;
+    [SerializeField] private GameObject exitPoint;
+
     [Header("Seed")]
     [SerializeField] private int seed;
     [SerializeField] private bool useRandomSeed = true;
@@ -296,6 +300,20 @@ public class DungeonLevelGenerator : MonoBehaviour
         Hallway newHallway = new Hallway(bottomLeftCorner, topRightCorner);
         listOfHallways.Add(newHallway);
     }
+
+
+    //here we are going to add a starting and ending point. So the game will choose a random room, every time, one for entry and one for exit.
+    //we will have the object themselves decide what room
+
+    private void DeclareStartingAndExitRooms()
+    {
+        Room entryRoom;
+        Room exitRoom;
+
+        List<Room> allRooms = listOfRooms;
+        
+    }
+
 
     private void ClearWorld()
     {

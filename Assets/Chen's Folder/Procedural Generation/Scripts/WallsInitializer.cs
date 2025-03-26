@@ -70,10 +70,11 @@ public class WallsInitializer
         }
     }
 
-    private void RemoveOverlappingWalls(List<Vector2> wallPositions, List<Room> rooms, List<Hallway> hallways, float minDistance = 0.5f)
+    private void RemoveOverlappingWalls(List<Vector2> wallPositions, List<Room> rooms, List<Hallway> hallways)
     {
         List<Vector2> positionsToRemove = new List<Vector2>();
-
+        float minDistance = 0.5f;
+        
         for (int i = 0; i < wallPositions.Count; i++)
         {
             for (int j = i + 1; j < wallPositions.Count; j++)
