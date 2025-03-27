@@ -6,7 +6,7 @@ namespace Managers
     public class LevelManager : MonoBehaviour
     {
         [SerializeField] public List<Coin> coins;
-        public List<Enemy.Enemy> enemies;
+        public List<Enemies.Enemy> enemies;
 
         public void RemoveCoin(Coin coin)
         {

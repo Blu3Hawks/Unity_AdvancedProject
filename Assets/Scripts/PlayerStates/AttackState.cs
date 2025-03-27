@@ -8,7 +8,6 @@ namespace PlayerStates
         private static readonly int Attack = Animator.StringToHash("Attack");
         private AnimationClip _attackAnimation;
         private float _attackDuration;
-        private bool _attackComplete;
 
         public AttackState(PlayerController player, Transform camera) : base(player, camera)
         {
