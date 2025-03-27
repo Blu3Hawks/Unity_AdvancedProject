@@ -119,6 +119,51 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &964373031
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 964373033}
+  - component: {fileID: 964373032}
+  m_Layer: 0
+  m_Name: Game Initializer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &964373032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 964373031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8e1afc74a73e0e41bccf8b4e162bb35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainHeroPrefab: {fileID: 3945437644902930148, guid: 4082c362faf114b4b87b30a6179666c9, type: 3}
+--- !u!4 &964373033
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 964373031}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1465520117
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,7 +331,6 @@ MonoBehaviour:
   wallPrefab: {fileID: 6978504755849014696, guid: d3f7cc04732507b4b83406b587dfe0dd, type: 3}
   entryPoint: {fileID: 9016449047566717179, guid: a71e9478b8e75d440b4782963483b42f, type: 3}
   exitPoint: {fileID: 9016449047566717179, guid: 1082a2e6a44320845af3bbb18091da11, type: 3}
-  seed: -733679924
 --- !u!4 &1642061760
 Transform:
   m_ObjectHideFlags: 0
@@ -526,3 +570,4 @@ SceneRoots:
   - {fileID: 1465520119}
   - {fileID: 1642061760}
   - {fileID: 1706637290}
+  - {fileID: 964373033}

@@ -433,7 +433,9 @@ public class DungeonLevelGenerator : MonoBehaviour
             GenerateLevel();
         }
 
+        DataPersistenceManager.instance.GameData.currentDungeonSeed = seed;
         Debug.Log(seed);
+        Debug.Log(DataPersistenceManager.instance.GameData.currentDungeonSeed);
     }
 
     private void OnApplicationQuit()
