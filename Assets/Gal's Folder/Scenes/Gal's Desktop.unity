@@ -4339,6 +4339,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 749e2624-7d28-4aaf-9ef6-b0adbad45d57
     m_ActionName: 'Player/Dash[/Keyboard/shift]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 465573f3-dd8a-4bf8-9baf-1a952594dc10
+    m_ActionName: 'Player/Block[/Mouse/rightButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -4360,15 +4364,17 @@ MonoBehaviour:
   animator: {fileID: 1852780232}
   cameraTransform: {fileID: 330585546}
   attackAnimation: {fileID: -203655887218126122, guid: 7c4f5732f677a9d419f2dec235f36d78, type: 3}
+  blockAnimation: {fileID: -203655887218126122, guid: a650d483b47d89244b30bbd42e1b8a0f, type: 3}
   weapon: {fileID: 1188241142}
   levelUpSystem: {fileID: 1852780234}
   moveSpeed: 3
   jumpForce: 5
   speedRotation: 10
   maxHp: 100
-  damage: 10
+  damageReduction: 0.8
   dashSpeed: 10
   dashDuration: 0.2
+  parryWindow: 0.5
   groundCheck: {fileID: 2027470452}
   groundRadius: 0.15
   groundLayer:
