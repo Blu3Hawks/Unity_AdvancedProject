@@ -1,27 +1,31 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameInitializer : MonoBehaviour
 {
     [SerializeField] private GameObject mainHeroPrefab;
-    private Vector3 defaultHeroPosition = Vector3.zero;
+    [SerializeField] private DungeonLevelGenerator levelGenerator;
 
     private void Start()
     {
-        InitializeGame();
+        StartCoroutine(InitializeGameDelayed());
     }
 
-    private void InitializeGame()
+    private IEnumerator InitializeGameDelayed()
     {
-        // Instantiate the MainHero
-        GameObject mainHero = Instantiate(mainHeroPrefab, defaultHeroPosition, Quaternion.identity);
+        //an issue occurs if this one's STart is before the level generated happened. Therefore - enumerator
+        while (levelGenerator.EntryPoint == null)
+            yield return null;
 
-        // Check if there is saved data
-        if (DataPersistenceManager.instance.HasGameData())
+        Vector3 entryPointPosition = new Vector3(levelGenerator.EntryPoint.CenterPoint.x, 1f, levelGenerator.EntryPoint.CenterPoint.y + 2);
+        GameObject mainHeroObject = Instantiate(mainHeroPrefab, Vector3.zero, Quaternion.identity);
+        MainHero mainHero = mainHeroObject.GetComponent<MainHero>();
+        mainHero.entryPointPosition = entryPointPosition;
+
+        if (DataPersistenceManager.instance.HasGameData() && DataPersistenceManager.instance.GameData.PlayerPosition != Vector3.zero)
         {
-            // Load the saved data
             DataPersistenceManager.instance.LoadGame();
-
-            // Apply the saved data to the MainHero
+            mainHero.transform.position = DataPersistenceManager.instance.GameData.PlayerPosition;
             IDataPersistence dataPersistence = mainHero.GetComponent<IDataPersistence>();
             if (dataPersistence != null)
             {
@@ -30,8 +34,9 @@ public class GameInitializer : MonoBehaviour
         }
         else
         {
-            // No saved data, start a new game
             DataPersistenceManager.instance.NewGame();
+            mainHero.transform.position = entryPointPosition;
         }
     }
+
 }

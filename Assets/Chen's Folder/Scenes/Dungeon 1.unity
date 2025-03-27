@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 53e9a18996b83c849bd9763c93a64ad6, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -148,7 +148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8e1afc74a73e0e41bccf8b4e162bb35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainHeroPrefab: {fileID: 3945437644902930148, guid: 4082c362faf114b4b87b30a6179666c9, type: 3}
+  mainHeroPrefab: {fileID: 3844904082859620963, guid: 498b1536dc83295478274755f8a44824, type: 3}
+  levelGenerator: {fileID: 1642061759}
 --- !u!4 &964373033
 Transform:
   m_ObjectHideFlags: 0
