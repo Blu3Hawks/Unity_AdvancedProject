@@ -4,8 +4,6 @@ namespace Enemy.States
 {
     public class EnemyPatrolState : EnemyState
     {
-        private static readonly int IsMoving = Animator.StringToHash("isMoving");
-
         private int _currentIndex;
 
         public EnemyPatrolState(Enemy enemy) : base(enemy)
@@ -17,7 +15,8 @@ namespace Enemy.States
         {
             if (!Enemy.animator) return;
             
-            Enemy.animator.SetBool(IsMoving, true);
+            //Enemy.animator.SetBool(IsMoving, true);
+            Enemy.SetMovementSpeed(Enemy.patrolSpeed);
         }
 
         public override void UpdateState()
@@ -57,7 +56,7 @@ namespace Enemy.States
         {
             if (!Enemy.animator) return;
             
-            Enemy.animator.SetBool(IsMoving, false);
+            //Enemy.animator.SetBool(IsMoving, false);
         }
     }
 }

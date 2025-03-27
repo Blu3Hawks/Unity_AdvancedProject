@@ -1,4 +1,3 @@
-using System;
 using Enemy.States;
 using Interfaces;
 using UnityEngine;
@@ -10,11 +9,13 @@ namespace Enemy
         [Header("References")] 
         public Animator animator;
         public Transform playerTransform;
+        public Weapon.Weapon weapon;
         
         [Header("Stats")]
         [SerializeField] private float _maxHp;
         public float patrolSpeed = 1f;
         public float chaseSpeed = 2f;
+        public float attackDuration = 3f;
 
         [Header("Ranges")] 
         [SerializeField] private float detectionRange = 10f;
@@ -26,6 +27,9 @@ namespace Enemy
         private float _curHp;
 
         protected EnemyState CurrentState;
+        
+        private static readonly int Speed = Animator.StringToHash("Speed");
+        private static readonly int Damage = Animator.StringToHash("Damage");
 
         protected void Awake()
         {
@@ -55,6 +59,13 @@ namespace Enemy
             CurrentState.EnterState();
         }
 
+        public virtual void SetMovementSpeed(float speed)
+        {
+            if (!animator) return;
+            
+            animator.SetFloat(Speed, speed);
+        }
+
         public bool IsPlayerDetected()
         {
             if (!playerTransform) return false;
@@ -79,6 +90,7 @@ namespace Enemy
                 // TODO: Create Death Event
             }
             
+            animator.SetTrigger(Damage);
             Debug.Log(_curHp);
         }
     }

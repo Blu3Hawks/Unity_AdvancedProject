@@ -1,30 +1,35 @@
+using Interfaces;
 using PlayerStates;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour , IDamageable
 {
     [Header("References")]
     public Rigidbody rb;
     public Animator animator;
     public Transform cameraTransform;
     public AnimationClip attackAnimation;
-    public Weapon weapon;
+    public Weapon.Weapon weapon;
     
     [Header("Forces")]
     public float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 10f;
     public float speedRotation = 10f;
 
+    [Header("Stats")] 
+    [SerializeField] private float maxHp = 100f;
+    
+    [Header("Dash")]
+    public float dashSpeed = 15f;
+    public float dashDuration = 0.2f;
+    
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundRadius = 0.5f;
     [SerializeField] private LayerMask groundLayer;
 
-    [Header("Dash")] 
-    public float dashSpeed = 15f;
-    public float dashDuration = 0.2f;
+    private float _curHp;
     
     // Player state
     private PlayerState _currentState;
@@ -64,6 +69,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        _curHp = maxHp;
         _currentState = new IdleState(this, cameraTransform);
         _currentState.EnterState();
     }
@@ -127,5 +133,18 @@ public class PlayerController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(groundCheck.position, groundRadius);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        _curHp -= damage;
+
+        if (_curHp <= 0f)
+        {
+            _curHp = 0f;
+            // TODO: Trigger Death Event
+        }
+        
+        Debug.Log(_curHp);
     }
 }

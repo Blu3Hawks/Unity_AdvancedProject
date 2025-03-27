@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cdaefc94094ae454496805fca3f0889e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 306204
+  packageName: Undead Legion Pack
+  packageVersion: 1.0
+  assetPath: Assets/Undead Legion Pack/WarriorSkeleton/FBX/WarriorSkeleton.controller
+  uploadId: 719961

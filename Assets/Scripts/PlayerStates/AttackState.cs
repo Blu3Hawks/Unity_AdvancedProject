@@ -18,14 +18,18 @@ namespace PlayerStates
         public override void EnterState()
         {
             Player.animator.SetTrigger(Attack);
-            _attackDuration = _attackAnimation.length;
+            
+            _attackDuration = _attackAnimation.length / 1.65f;
+            
             Player.weapon.EnableCollider();
+            
             Player.StartCoroutine(EndOfAttack());
         }
 
         public override void ExitState()
         {
             Player.animator.ResetTrigger(Attack);
+            
             Player.weapon.DisableCollider();
         }
 

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 76d6af5f53b87424887a04a00ae1ee05
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 306204
+  packageName: Undead Legion Pack
+  packageVersion: 1.0
+  assetPath: Assets/Undead Legion Pack/ArcherSkeleton/FBX/ArcherSkeleton.controller
+  uploadId: 719961
