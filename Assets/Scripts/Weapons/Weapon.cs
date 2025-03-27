@@ -32,5 +32,7 @@ namespace Weapons
         {
             damage *= multiplier;
         }
+        
+        public virtual void ResetPlayerHit(){}
     }
 }

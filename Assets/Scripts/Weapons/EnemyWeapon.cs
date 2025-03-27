@@ -20,11 +20,8 @@ namespace Weapons
             }
         }
 
-        private void OnTriggerExit(Collider other)
+        public override void ResetPlayerHit()
         {
-            if (!other.CompareTag("Player")) return;
-            
-            // Reset the player hit bool
             _isPlayerHit = false;
         }
     }
