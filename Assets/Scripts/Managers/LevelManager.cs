@@ -9,6 +9,7 @@ namespace Managers
         public int CurrentLevel { get { return currentLevel; } }
 
         [SerializeField] public List<Coin> coins;
+        public List<Enemies.Enemy> enemies;
 
         public void RemoveCoin(Coin coin)
         {
