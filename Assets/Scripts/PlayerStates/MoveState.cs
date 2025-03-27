@@ -38,6 +38,9 @@ namespace PlayerStates
             
             else if (Player.AttackPressed())
                 Player.TransitionToState(new AttackState(Player, Player.cameraTransform));
+            
+            else if (Player.BlockPressed())
+                Player.TransitionToState(new DefendState(Player, Player.cameraTransform));
         }
 
         public override void FixedUpdateState()

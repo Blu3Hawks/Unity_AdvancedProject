@@ -1,9 +1,9 @@
-using Enemy.States;
+using Enemies.States;
 using Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Enemy
+namespace Enemies
 {
     public class Enemy : MonoBehaviour , IDamageable
     {
@@ -13,7 +13,7 @@ namespace Enemy
         [Header("References")] 
         public Animator animator;
         public Transform playerTransform;
-        public Weapon.Weapon weapon;
+        public Weapons.Weapon weapon;
         
         [Header("Stats")]
         [SerializeField] private float _maxHp;
@@ -91,9 +91,9 @@ namespace Enemy
             return Vector3.Distance(transform.position, playerTransform.position) <= attackRange;
         }
 
-        public virtual void TakeDamage(float damage)
+        public virtual void TakeDamage(float damageAmount)
         {
-            _curHp -= damage;
+            _curHp -= damageAmount;
 
             if (_curHp <= 0)
             {

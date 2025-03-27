@@ -1,15 +1,14 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Weapon
+namespace Weapons
 {
-    public class PlayerWeapon : Weapon
+    public class PlayerWeapon : Weapons.Weapon
     {
         [Header("References")] 
         [SerializeField] private PlayerController player;
         
-        private HashSet<Enemy.Enemy> _hitEnemies = new ();
+        private HashSet<Enemies.Enemy> _hitEnemies = new ();
         
         public override void EnableCollider()
         {
@@ -22,7 +21,7 @@ namespace Weapon
         {
             if (!other.CompareTag("Enemy")) return;
 
-            var enemy = other.GetComponent<Enemy.Enemy>();
+            var enemy = other.GetComponent<Enemies.Enemy>();
 
             if (enemy)
             {

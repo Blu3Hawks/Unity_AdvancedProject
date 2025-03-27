@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace Weapon
+namespace Weapons
 {
     public class Weapon : MonoBehaviour
     {
@@ -27,6 +26,11 @@ namespace Weapon
         public virtual void DisableCollider()
         {
             weaponCollider.enabled = false;
+        }
+
+        public virtual void SetDamageWithMultiplier(float multiplier)
+        {
+            damage *= multiplier;
         }
     }
 }

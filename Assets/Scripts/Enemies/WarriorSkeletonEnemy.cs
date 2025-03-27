@@ -1,4 +1,4 @@
-namespace Enemy
+namespace Enemies
 {
     public class WarriorSkeletonEnemy : Enemy
     {

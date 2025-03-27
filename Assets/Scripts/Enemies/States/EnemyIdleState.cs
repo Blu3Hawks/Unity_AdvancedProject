@@ -1,4 +1,4 @@
-namespace Enemy.States
+namespace Enemies.States
 {
     public class EnemyIdleState : EnemyState
     {

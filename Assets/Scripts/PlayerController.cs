@@ -1,16 +1,22 @@
 using Interfaces;
 using PlayerStates;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour , IDamageable
 {
+    // Events
+    public event UnityAction OnPlayerDeath;
+    public event UnityAction<float> OnParry;
+    
     [Header("References")]
     public Rigidbody rb;
     public Animator animator;
     public Transform cameraTransform;
     public AnimationClip attackAnimation;
-    public Weapon.Weapon weapon;
+    public AnimationClip blockAnimation;
+    public Weapons.Weapon weapon;
     [SerializeField] private LevelUpSystem levelUpSystem;
     
     [Header("Forces")]
@@ -20,11 +26,14 @@ public class PlayerController : MonoBehaviour , IDamageable
 
     [Header("Stats")] 
     [SerializeField] private float maxHp = 100f;
-    public float damage = 10f;
+    [SerializeField] private float damageReduction = 0.8f; // Should be between 0-1
     
     [Header("Dash")]
     public float dashSpeed = 15f;
     public float dashDuration = 0.2f;
+
+    [Header("Durations")] 
+    public float parryWindow = 0.5f;
     
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
@@ -44,10 +53,18 @@ public class PlayerController : MonoBehaviour , IDamageable
     private InputAction _jumpAction;
     private InputAction _dashAction;
     private InputAction _attackAction;
+    private InputAction _blockAction;
     
     // Move input and is dashing bool
     private Vector2 _moveInput;
     private bool _isDashing;
+    
+    // Damage Multiplier
+    private float _damageMultiplier = 1f;
+    
+    // Defence booleans
+    public bool IsParrying { get; set; }
+    public bool IsBlocking { get; set; }
 
     private void Awake()
     {
@@ -57,6 +74,7 @@ public class PlayerController : MonoBehaviour , IDamageable
         _jumpAction = _controls.Player.Jump;
         _dashAction = _controls.Player.Dash;
         _attackAction = _controls.Player.Attack;
+        _blockAction = _controls.Player.Block;
     }
     
     private void OnEnable()
@@ -120,6 +138,11 @@ public class PlayerController : MonoBehaviour , IDamageable
     {
         return _attackAction.triggered;
     }
+
+    public bool BlockPressed()
+    {
+        return _blockAction.triggered;
+    }
     
     // This function called by the animator - Jump Animation event.
     public void OnJumpAnimation()
@@ -132,13 +155,7 @@ public class PlayerController : MonoBehaviour , IDamageable
     {
         return _controls.Player.Move.ReadValue<Vector2>();
     }
-
-    public void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(groundCheck.position, groundRadius);
-    }
-
+    
     private void LevelUp()
     {
         weapon.damage += 10f;
@@ -147,14 +164,38 @@ public class PlayerController : MonoBehaviour , IDamageable
     // IDamagable function
     public void TakeDamage(float damage)
     {
-        _curHp -= damage;
+        if (IsParrying)
+        {
+            _damageMultiplier += 0.25f;
+            weapon.SetDamageWithMultiplier(_damageMultiplier);
+            OnParry?.Invoke(_damageMultiplier);
+            return;
+        }
+
+        if (IsBlocking)
+        {
+            _curHp -= damage * damageReduction;
+        }
+        else
+        {
+            _curHp -= damage;
+        }
+        
+        // Reset damage multiplier
+        _damageMultiplier = 1f;
+        weapon.SetDamageWithMultiplier(_damageMultiplier);
 
         if (_curHp <= 0f)
         {
             _curHp = 0f;
             // TODO: Trigger Death Event
+            OnPlayerDeath?.Invoke();
         }
-        
-        Debug.Log(_curHp);
+    }
+    
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(groundCheck.position, groundRadius);
     }
 }
