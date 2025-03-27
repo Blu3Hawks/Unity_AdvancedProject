@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour , IDamageable
     public Transform cameraTransform;
     public AnimationClip attackAnimation;
     public Weapon.Weapon weapon;
+    [SerializeField] private LevelUpSystem levelUpSystem;
     
     [Header("Forces")]
     public float moveSpeed = 5f;
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour , IDamageable
 
     [Header("Stats")] 
     [SerializeField] private float maxHp = 100f;
+    public float damage = 10f;
     
     [Header("Dash")]
     public float dashSpeed = 15f;
@@ -60,11 +62,13 @@ public class PlayerController : MonoBehaviour , IDamageable
     private void OnEnable()
     {
         _controls.Enable();
+        levelUpSystem.OnLevelUp += LevelUp;
     }
 
     private void OnDisable()
     {
         _controls.Disable();
+        levelUpSystem.OnLevelUp -= LevelUp;
     }
 
     private void Start()
@@ -135,6 +139,12 @@ public class PlayerController : MonoBehaviour , IDamageable
         Gizmos.DrawSphere(groundCheck.position, groundRadius);
     }
 
+    private void LevelUp()
+    {
+        weapon.damage += 10f;
+    }
+    
+    // IDamagable function
     public void TakeDamage(float damage)
     {
         _curHp -= damage;

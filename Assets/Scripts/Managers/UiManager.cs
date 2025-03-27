@@ -19,7 +19,6 @@ namespace Managers
 
         private void Awake()
         {
-            gameManager.OnCoinPickUp += SetScoreText;
             pauseManager.OnPauseEnter += OpenPauseMenu;
             pauseManager.OnPauseClose += ClosePauseMenu;
         }

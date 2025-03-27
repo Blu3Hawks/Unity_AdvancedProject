@@ -1313,6 +1313,8 @@ GameObject:
   - component: {fileID: 1408866320306514330}
   - component: {fileID: 1372300196028286051}
   - component: {fileID: 1468203531296951610}
+  - component: {fileID: 6102440707228352272}
+  - component: {fileID: 1069495224958441935}
   m_Layer: 0
   m_Name: Hammer
   m_TagString: Untagged
@@ -1388,6 +1390,41 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6102440707228352272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6992959906722334500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 506ac4be712848d9a67d6690f5a22990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
+  weaponCollider: {fileID: 1069495224958441935}
+--- !u!65 &1069495224958441935
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6992959906722334500}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.79936254, y: 0.5, z: 0.46523082}
+  m_Center: {x: 0, y: 1.03, z: -0.0027523115}
 --- !u!1 &7044193732585410651
 GameObject:
   m_ObjectHideFlags: 0
