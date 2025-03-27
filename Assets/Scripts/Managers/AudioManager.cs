@@ -16,7 +16,7 @@ namespace Managers
 
         private void Start()
         {
-            gameManager.OnCoinPickUp += PlayCoinSfx;
+            
         }
 
         private void PlayCoinSfx(int coin)

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -5,26 +6,17 @@ namespace Managers
 {
     public class GameManager : MonoBehaviour
     {
-        public event UnityAction<int> OnCoinPickUp;
-
-        private int _score;
-        
+        [Header("References")]
         [SerializeField] private PlayerController player;
         [SerializeField] private LevelManager levelManager;
-        
-        private void Start()
-        {
-            foreach (var coin in levelManager.coins)
-            {
-                coin.OnCollected += CoinOnCollected;
-            }
-        }
+        [SerializeField] private LevelUpSystem levelUpSystem;
 
-        private void CoinOnCollected(Coin coin)
+        private void Awake()
         {
-            var coinScore = coin.GetScore();
-            _score += coinScore;
-            OnCoinPickUp?.Invoke(_score);
+            foreach (var enemy in levelManager.enemies)
+            {
+                enemy.OnEnemyDeath += levelUpSystem.AddXp;
+            }
         }
     }
 }

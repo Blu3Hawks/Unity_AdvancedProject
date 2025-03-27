@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,8 +6,11 @@ namespace Weapon
 {
     public class PlayerWeapon : Weapon
     {
+        [Header("References")] 
+        [SerializeField] private PlayerController player;
+        
         private HashSet<Enemy.Enemy> _hitEnemies = new ();
-
+        
         public override void EnableCollider()
         {
             _hitEnemies.Clear();

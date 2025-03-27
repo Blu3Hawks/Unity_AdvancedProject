@@ -1,11 +1,15 @@
 using Enemy.States;
 using Interfaces;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Enemy
 {
     public class Enemy : MonoBehaviour , IDamageable
     {
+        // Events
+        public event UnityAction<float> OnEnemyDeath;
+        
         [Header("References")] 
         public Animator animator;
         public Transform playerTransform;
@@ -13,6 +17,8 @@ namespace Enemy
         
         [Header("Stats")]
         [SerializeField] private float _maxHp;
+        
+        [Header("Forces")]
         public float patrolSpeed = 1f;
         public float chaseSpeed = 2f;
         public float attackDuration = 3f;
@@ -23,6 +29,10 @@ namespace Enemy
 
         [Header("Patrol Points")] 
         public Transform[] patrolPoints;
+
+        [Header("Rewards")] 
+        [SerializeField] private float xp = 50f;
+        [SerializeField] private float xpModifier = 1f;
         
         private float _curHp;
 
@@ -30,6 +40,7 @@ namespace Enemy
         
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int Damage = Animator.StringToHash("Damage");
+        private static readonly int Death = Animator.StringToHash("Death");
 
         protected void Awake()
         {
@@ -87,7 +98,10 @@ namespace Enemy
             if (_curHp <= 0)
             {
                 _curHp = 0;
-                // TODO: Create Death Event
+                OnEnemyDeath?.Invoke(xp * xpModifier);
+                animator.SetTrigger(Death);
+                Destroy(gameObject, 3f);
+                return;
             }
             
             animator.SetTrigger(Damage);

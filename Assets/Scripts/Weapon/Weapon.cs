@@ -1,11 +1,18 @@
+using System;
 using UnityEngine;
 
 namespace Weapon
 {
     public class Weapon : MonoBehaviour
     {
-        [SerializeField] protected float damage = 10f;
+        public float damage;
+        [SerializeField] private float baseDamage = 10f;
         [SerializeField] private Collider weaponCollider;
+
+        private void Awake()
+        {
+            damage = baseDamage;
+        }
 
         private void Start()
         {

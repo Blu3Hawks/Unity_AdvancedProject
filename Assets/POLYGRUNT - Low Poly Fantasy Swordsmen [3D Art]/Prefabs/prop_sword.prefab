@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6461619794047877308}
   - component: {fileID: 9099733871406855286}
   - component: {fileID: 1940104765150841007}
-  - component: {fileID: 8196658660147662193}
+  - component: {fileID: 9022124276676395766}
   m_Layer: 0
   m_Name: prop_sword
   m_TagString: Untagged
@@ -111,7 +111,7 @@ CapsuleCollider:
   m_Height: 1.1311368
   m_Direction: 1
   m_Center: {x: 0, y: 0.4065855, z: 0}
---- !u!114 &8196658660147662193
+--- !u!114 &9022124276676395766
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,8 +120,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7298157750031488419}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1543abbc6c64f3243ba1c2b1dae331f6, type: 3}
+  m_Script: {fileID: 11500000, guid: 0ded14fa3d0b479b8e46c39bacd5a872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+  baseDamage: 10
   weaponCollider: {fileID: 1940104765150841007}
+  player: {fileID: 0}
