@@ -8,7 +8,7 @@ namespace Enemy.States
 
         public override void EnterState()
         {
-            
+            Enemy.SetMovementSpeed(0f);
         }
 
         public override void UpdateState()

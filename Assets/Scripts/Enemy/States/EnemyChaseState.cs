@@ -4,8 +4,6 @@ namespace Enemy.States
 {
     public class EnemyChaseState : EnemyState
     {
-        private static readonly int IsRunning = Animator.StringToHash("isRunning");
-
         public EnemyChaseState(Enemy enemy) : base(enemy)
         {
         }
@@ -14,7 +12,8 @@ namespace Enemy.States
         {
             if (!Enemy.animator) return;
             
-            Enemy.animator.SetBool(IsRunning, true);
+            //Enemy.animator.SetBool(IsRunning, true);
+            Enemy.SetMovementSpeed(Enemy.chaseSpeed);
         }
 
         public override void UpdateState()
@@ -47,7 +46,7 @@ namespace Enemy.States
         {
             if (!Enemy.animator) return;
             
-            Enemy.animator.SetBool(IsRunning, false);
+            //Enemy.animator.SetBool(IsRunning, false);
         }
     }
 }

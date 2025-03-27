@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 079b8bc90376d594e8256058b837be40
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 306204
+  packageName: Undead Legion Pack
+  packageVersion: 1.0
+  assetPath: Assets/Undead Legion Pack/WizardSkeleton/FBX/WizardSkeleton.controller
+  uploadId: 719961
