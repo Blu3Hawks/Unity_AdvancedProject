@@ -1,4 +1,5 @@
 using TMPro;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,19 +14,14 @@ namespace Managers
 
         [Header("References")] 
         [SerializeField] private GameObject pauseMenu;
-        [SerializeField] private TextMeshProUGUI scoreText;
         [SerializeField] private Slider musicSlider;
         [SerializeField] private Slider sfxSlider;
+        [SerializeField] private HealthBar healthBar;
 
         private void Awake()
         {
             pauseManager.OnPauseEnter += OpenPauseMenu;
             pauseManager.OnPauseClose += ClosePauseMenu;
-        }
-
-        private void SetScoreText(int score)
-        {
-            scoreText.text = score.ToString("D6");
         }
 
         public void SetMusicSlider(float value)
@@ -48,6 +44,11 @@ namespace Managers
         {
             // Close pause menu
             pauseMenu.SetActive(false);
+        }
+
+        public void UpdatePlayerHpBar(float curHp, float maxHp)
+        {
+            healthBar.UpdateHealthBar(curHp, maxHp);
         }
     }
 }
