@@ -9,8 +9,6 @@ namespace Enemies.States
         
         private float _attackTimer;
         
-        private float _attackOffSetDuration = 0.15f;
-        private float _startAttack;
         private bool _isColliderEnabled;
 
         public EnemyAttackState(Enemy enemy) : base(enemy)
@@ -22,8 +20,6 @@ namespace Enemies.States
             Enemy.animator.SetFloat(Speed, 0f);
 
             _attackTimer = Enemy.attackDuration;
-
-            _startAttack = _attackOffSetDuration;
             
             if(!Enemy.animator) return;
             Enemy.animator.SetTrigger(Attack);
@@ -32,13 +28,6 @@ namespace Enemies.States
         public override void UpdateState()
         {
             _attackTimer -= Time.deltaTime;
-            _startAttack -= Time.deltaTime;
-
-            if (_startAttack <= 0 && !_isColliderEnabled)
-            {
-                Enemy.weapon.EnableCollider();
-                _isColliderEnabled = true;
-            }
 
             if (!(_attackTimer <= 0)) return;
 
@@ -67,7 +56,6 @@ namespace Enemies.States
 
         public override void ExitState()
         {
-            Enemy.weapon.DisableCollider();
             Enemy.weapon.ResetPlayerHit();
             
             if(!Enemy.animator) return;

@@ -30,7 +30,7 @@ namespace Weapons
 
         public virtual void SetDamageWithMultiplier(float multiplier)
         {
-            damage *= multiplier;
+            damage = baseDamage * multiplier;
         }
         
         public virtual void ResetPlayerHit(){}

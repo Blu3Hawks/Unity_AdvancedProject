@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour , IDamageable
     // Events
     public event UnityAction OnPlayerDeath;
     public event UnityAction<float> OnParry;
+    public event UnityAction<float, float> OnHit;
     
     [Header("References")]
     public Rigidbody rb;
@@ -184,6 +185,9 @@ public class PlayerController : MonoBehaviour , IDamageable
         // Reset damage multiplier
         _damageMultiplier = 1f;
         weapon.SetDamageWithMultiplier(_damageMultiplier);
+        
+        // Invoke On Hit event
+        OnHit?.Invoke(_curHp, maxHp);
 
         if (_curHp <= 0f)
         {
