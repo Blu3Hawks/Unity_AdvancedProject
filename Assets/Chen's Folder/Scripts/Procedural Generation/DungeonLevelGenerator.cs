@@ -72,7 +72,7 @@ public class DungeonLevelGenerator : MonoBehaviour
     //properties
     public Room EntryPoint { get { return currentEntryObject; } } //the player will access it - and spawn on top of it
     public int Level { get { return level; } }  
-    public List<Room> ListOfRooms { get { return listOfRooms; } }
+   // public List<Room> ListOfRooms { get { return listOfRooms; } }
 
     private void Start()
     {
@@ -128,23 +128,23 @@ public class DungeonLevelGenerator : MonoBehaviour
 
     public void GenerateLevel()
     {
-        ClearWorldInGame();
-        GenerateRandomLevelValues();
-        spaceDivider = new SpaceDivider(levelWidth, levelLength, levelIterations, maxRoomWidth, maxRoomLength);
-        spaceDivider.GenerateAllSpaces();
+        ClearWorldInGame(); //clear everything previously made
+        GenerateRandomLevelValues(); //get bew random values
+        spaceDivider = new SpaceDivider(levelWidth, levelLength, levelIterations, maxRoomWidth, maxRoomLength);//divide the space
+        spaceDivider.GenerateAllSpaces();//generate them
 
         foreach (SpaceArea space in spaceDivider.SpacesToPrint)
         {
-            GenerateRoom(space);
+            GenerateRoom(space); //generate new rooms for each space
         }
 
-        roomConnector = new RoomConnector(listOfRooms);
+        roomConnector = new RoomConnector(listOfRooms);//create a room connector
 
-        CreatePlanesForSpaces();
-        CreatePlanesForRooms();
-        CreatePlanesForHallways(roomConnector);
+        CreatePlanesForSpaces();//initialize meshes
+        CreatePlanesForRooms();//same here
+        CreatePlanesForHallways(roomConnector);//hallways, corridors w/e
 
-        wallsInitializer = new WallsInitializer();
+        wallsInitializer = new WallsInitializer();//create walls
         foreach (Room room in listOfRooms)
         {
             wallsInitializer.SetupWallsForRoom(room, 1f);
@@ -168,6 +168,8 @@ public class DungeonLevelGenerator : MonoBehaviour
             }
         }
 
+        //set the enemy spawner's list of rooms
+        enemySpawner.SetListOfRooms(listOfRooms);
         DeclareStartingAndExitRooms();
     }
 
