@@ -15,10 +15,10 @@ public class GameInitializer : MonoBehaviour
     private IEnumerator InitializeGameDelayed()
     {
         //an issue occurs if this one's STart is before the level generated happened. Therefore - enumerator
-        while (levelGenerator.EntryPoint == null)
+        while (levelGenerator.EntryPointRoom == null)
             yield return null;
 
-        Vector3 entryPointPosition = new Vector3(levelGenerator.EntryPoint.CenterPoint.x, 1f, levelGenerator.EntryPoint.CenterPoint.y + 2);
+        Vector3 entryPointPosition = new Vector3(levelGenerator.EntryPointRoom.CenterPoint.x, 1f, levelGenerator.EntryPointRoom.CenterPoint.y + 2);
         GameObject mainHeroObject = Instantiate(mainHeroPrefab, Vector3.zero, Quaternion.identity);
         MainHero mainHero = mainHeroObject.GetComponent<MainHero>();
         mainHero.entryPointPosition = entryPointPosition;

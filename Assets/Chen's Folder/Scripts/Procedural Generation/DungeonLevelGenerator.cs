@@ -66,11 +66,11 @@ public class DungeonLevelGenerator : MonoBehaviour
     private Transform wallParent;
 
     //local objects
-    private Room currentEntryObject;
+    private Room currentEntryRoom;
     GameData gameData;
 
     //properties
-    public Room EntryPoint { get { return currentEntryObject; } } //the player will access it - and spawn on top of it
+    public Room EntryPointRoom { get { return currentEntryRoom; } } //the player will access it - and spawn on top of it
     public int Level { get { return level; } }  
    // public List<Room> ListOfRooms { get { return listOfRooms; } }
 
@@ -119,7 +119,7 @@ public class DungeonLevelGenerator : MonoBehaviour
             MainHero mainHero = hero.GetComponent<MainHero>();
             if (mainHero != null)
             {
-                mainHero.SetEntryPoint(EntryPoint.CenterPoint);
+                mainHero.SetEntryPoint(EntryPointRoom.CenterPoint);
             }
         }
 
@@ -169,7 +169,7 @@ public class DungeonLevelGenerator : MonoBehaviour
         }
 
         //set the enemy spawner's list of rooms
-        enemySpawner.SetListOfRooms(listOfRooms);
+        enemySpawner.SetListOfRooms(listOfRooms, currentEntryRoom);
         DeclareStartingAndExitRooms();
     }
 
@@ -404,7 +404,7 @@ public class DungeonLevelGenerator : MonoBehaviour
         exitRoom = allRooms[randomExitRoomIndex];
 
         // Set the current entry object to the selected entry room
-        currentEntryObject = entryRoom;
+        currentEntryRoom = entryRoom;
 
         // now we will decide where to place the entry point and exit point. both will be in the middle of the room
         Instantiate(entryPoint, new Vector3(entryRoom.CenterPoint.x, 1f, entryRoom.CenterPoint.y), Quaternion.identity, roomsParent);
