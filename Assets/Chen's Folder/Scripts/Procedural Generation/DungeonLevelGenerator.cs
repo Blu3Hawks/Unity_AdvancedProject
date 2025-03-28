@@ -42,9 +42,11 @@ public class DungeonLevelGenerator : MonoBehaviour
     [SerializeField] private GameObject exitPoint;
 
     [Header("Spawners")]
+    [SerializeField] private RandomEnemySpawner enemySpawner;
 
     public int seed;
     private bool useRandomSeed = true;
+    private int level;
 
     //references
     private SpaceDivider spaceDivider;
@@ -69,7 +71,7 @@ public class DungeonLevelGenerator : MonoBehaviour
 
     //properties
     public Room EntryPoint { get { return currentEntryObject; } } //the player will access it - and spawn on top of it
-
+    public int Level { get { return level; } }  
     public List<Room> ListOfRooms { get { return listOfRooms; } }
 
     private void Start()
@@ -79,32 +81,35 @@ public class DungeonLevelGenerator : MonoBehaviour
         {
             seed = gameData.currentDungeonSeed;
             useRandomSeed = gameData.useRandomSeed;
+            level = gameData.level;
             Debug.Log("Loaded seed: " + gameData.currentDungeonSeed);
             Debug.Log("Loaded useRandomSeed: " + gameData.useRandomSeed);
+            Debug.Log("Loaded level: " + gameData.level);
         }
         else
         {
             useRandomSeed = true;
+            level = 0;
         }
         GenerateLevelWithSeed();
 
-        // Subscribe to the OnEnteringNextLevel event
         NextRoom.OnEnteringNextLevel += HandleEnteringNextLevel;
     }
 
     private void OnDestroy()
     {
-        // Unsubscribe from the OnEnteringNextLevel event
         NextRoom.OnEnteringNextLevel -= HandleEnteringNextLevel;
     }
 
     private void HandleEnteringNextLevel()
     {
+        level++;
+        DataPersistenceManager.instance.GameData.level = level; // get the level saved.
         useRandomSeed = true;
-        seed = random.Range(int.MinValue, int.MaxValue);//get new seed
+        seed = random.Range(int.MinValue, int.MaxValue); // get new seed
         DataPersistenceManager.instance.GameData.currentDungeonSeed = seed;
 
-        //generate a new level
+        // generate a new level
         GenerateLevel();
 
         // update the hero's position to the new entry point
@@ -117,6 +122,8 @@ public class DungeonLevelGenerator : MonoBehaviour
                 mainHero.SetEntryPoint(EntryPoint.CenterPoint);
             }
         }
+
+        enemySpawner.SpawnEnemies(level); // here we will spawn them enemieessss only once we enter a new wave tho.
     }
 
     public void GenerateLevel()
@@ -152,7 +159,7 @@ public class DungeonLevelGenerator : MonoBehaviour
             CreateWallsForHallways();
         }
 
-        //we will check if, somehow, we have a room with no connections
+        // we will check if, somehow, we have a room with no connections
         foreach (Room room in listOfRooms)
         {
             if (room.amountOfRoomsToConnect <= 0)
@@ -301,18 +308,18 @@ public class DungeonLevelGenerator : MonoBehaviour
 
     private void CreatePlanesForHallways(RoomConnector roomConnector)
     {
-        //have a hashset for the pairs of rooms, so every 2 rooms that are connected considered paired
+        // have a hashset for the pairs of rooms, so every 2 rooms that are connected considered paired
         HashSet<(Room, Room)> connectedPairs = new HashSet<(Room, Room)>();
 
         foreach (Room room in listOfRooms)
         {
             foreach (Room connected in room.ListOfRoomsToConnect)
             {
-                //make sure we don't repeat the same rooms
+                // make sure we don't repeat the same rooms
                 if (connectedPairs.Contains((connected, room)) || connectedPairs.Contains((room, connected)))
                     continue;
 
-                //add them to the hashset and instantiate
+                // add them to the hashset and instantiate
                 connectedPairs.Add((room, connected));
                 InstantiateHallwayBetweenRooms(room, connected, roomConnector);
             }
@@ -321,20 +328,20 @@ public class DungeonLevelGenerator : MonoBehaviour
 
     private void InstantiateHallwayBetweenRooms(Room roomA, Room roomB, RoomConnector roomConnector)
     {
-        //check starting and lasting rooms' center points
+        // check starting and lasting rooms' center points
         Vector2 startPoint = roomConnector.GetClosestSidePoint(roomA, roomB.CenterPoint);
         Vector2 endPoint = roomConnector.GetClosestSidePoint(roomB, roomA.CenterPoint);
 
-        //start by horizontally instantiation
+        // start by horizontally instantiation
         Vector2 horizontal = new Vector2(endPoint.x, startPoint.y);
         SpawnHallway(startPoint, horizontal);
-        //then move vertically
+        // then move vertically
         Vector2 vertical = endPoint;
         SpawnHallway(horizontal, vertical);
     }
 
-    //here we get a start point and an end point, by getting these values,
-    //we ensure that we will be moving properly horizontally first and then vertically
+    // here we get a start point and an end point, by getting these values,
+    // we ensure that we will be moving properly horizontally first and then vertically
     private void SpawnHallway(Vector2 startPoint, Vector2 endPoint)
     {
         if (hallwayPrefab == null)
@@ -352,7 +359,7 @@ public class DungeonLevelGenerator : MonoBehaviour
 
         float scaleModifier = 9.15f;
 
-        //check the direction that we will be facing, and scale it properly towards where we're heading
+        // check the direction that we will be facing, and scale it properly towards where we're heading
         if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
         {
             scale = new Vector3(length / scaleModifier, 1f, hallwayWidth / scaleModifier);
@@ -362,20 +369,20 @@ public class DungeonLevelGenerator : MonoBehaviour
             scale = new Vector3(hallwayWidth / scaleModifier, 1f, length / scaleModifier);
         }
 
-        //instantiate the hallway GameObject
+        // instantiate the hallway GameObject
         GameObject hallwayObject = Instantiate(hallwayPrefab, position, Quaternion.identity, hallwaysParent);
         hallwayObject.transform.localScale = scale;
         listOfHallwaysObjects.Add(hallwayObject);
 
-        //Create hallway and add it to the list of hallways
+        // Create hallway and add it to the list of hallways
         Vector2Int bottomLeftCorner = Vector2Int.RoundToInt(startPoint);
         Vector2Int topRightCorner = Vector2Int.RoundToInt(endPoint);
         Hallway newHallway = new Hallway(bottomLeftCorner, topRightCorner);
         listOfHallways.Add(newHallway);
     }
 
-    //here we are going to add a starting and ending point. So the game will choose a random room, every time, one for entry and one for exit.
-    //we will have the object themselves decide what room
+    // here we are going to add a starting and ending point. So the game will choose a random room, every time, one for entry and one for exit.
+    // we will have the object themselves decide what room
 
     private void DeclareStartingAndExitRooms()
     {
@@ -397,7 +404,7 @@ public class DungeonLevelGenerator : MonoBehaviour
         // Set the current entry object to the selected entry room
         currentEntryObject = entryRoom;
 
-        //now we will decide where to place the entry point and exit point. both will be in the middle of the room
+        // now we will decide where to place the entry point and exit point. both will be in the middle of the room
         Instantiate(entryPoint, new Vector3(entryRoom.CenterPoint.x, 1f, entryRoom.CenterPoint.y), Quaternion.identity, roomsParent);
         GameObject exitLevelPoint = Instantiate(exitPoint, new Vector3(exitRoom.CenterPoint.x, 1f, exitRoom.CenterPoint.y), Quaternion.identity, roomsParent);
     }
@@ -529,14 +536,18 @@ public class DungeonLevelGenerator : MonoBehaviour
 
         DataPersistenceManager.instance.GameData.currentDungeonSeed = seed;
         DataPersistenceManager.instance.GameData.useRandomSeed = useRandomSeed;
+        DataPersistenceManager.instance.GameData.level = level;
         Debug.Log("Saved seed: " + seed);
         Debug.Log("Saved useRandomSeed: " + useRandomSeed);
+        Debug.Log("Saved level: " + level);
     }
 
     private void OnApplicationQuit()
     {
         DataPersistenceManager.instance.GameData.currentDungeonSeed = seed;
         DataPersistenceManager.instance.GameData.useRandomSeed = false;
+        DataPersistenceManager.instance.GameData.level = level;
         Debug.Log("Saved seed on quit: " + DataPersistenceManager.instance.GameData.currentDungeonSeed);
+        Debug.Log("Saved level on quit: " + DataPersistenceManager.instance.GameData.level);
     }
 }

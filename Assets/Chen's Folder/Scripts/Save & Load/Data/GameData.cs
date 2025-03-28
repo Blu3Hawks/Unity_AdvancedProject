@@ -13,12 +13,15 @@ public class GameData
 
     //player varaiables
     public Vector3 PlayerPosition;
+    public int level;
 
     public GameData()
     {
         currentDungeonSeed = 0;
         useRandomSeed = true;
         PlayerPosition = Vector3.zero;
+        level = 1;
+
     }
 
 }

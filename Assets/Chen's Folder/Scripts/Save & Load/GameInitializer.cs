@@ -5,6 +5,7 @@ public class GameInitializer : MonoBehaviour
 {
     [SerializeField] private GameObject mainHeroPrefab;
     [SerializeField] private DungeonLevelGenerator levelGenerator;
+    [SerializeField] private RandomEnemySpawner enemySpawner;
 
     private void Start()
     {
@@ -35,6 +36,8 @@ public class GameInitializer : MonoBehaviour
         else
         {
             DataPersistenceManager.instance.NewGame();
+            enemySpawner.SpawnEnemies(levelGenerator.Level); //here we will spawn enemies if we enter to a new game.
+
             mainHero.transform.position = entryPointPosition;
         }
     }

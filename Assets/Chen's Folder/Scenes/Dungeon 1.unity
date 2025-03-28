@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 964373033}
   - component: {fileID: 964373032}
+  - component: {fileID: 964373034}
   m_Layer: 0
   m_Name: Game Initializer
   m_TagString: Untagged
@@ -150,6 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainHeroPrefab: {fileID: 3844904082859620963, guid: 498b1536dc83295478274755f8a44824, type: 3}
   levelGenerator: {fileID: 1642061759}
+  enemySpawner: {fileID: 964373034}
 --- !u!4 &964373033
 Transform:
   m_ObjectHideFlags: 0
@@ -165,6 +167,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &964373034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 964373031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aa427eae27e5a647b64ce013a2f7c92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1465520117
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,8 +207,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 0.44122618, g: 0.05339978, b: 0.754717, a: 1}
+  m_Intensity: 0.47
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -203,10 +217,10 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.979
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 5.98
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -236,7 +250,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0.34
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -256,13 +270,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1465520117}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: 0.61204326, y: 0.3121699, z: -0.28605098, w: 0.6679281}
+  m_LocalPosition: {x: 11.61, y: 3, z: 11.99}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 85, y: 50.1, z: 0}
 --- !u!114 &1465520120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +346,8 @@ MonoBehaviour:
   wallPrefab: {fileID: 6978504755849014696, guid: d3f7cc04732507b4b83406b587dfe0dd, type: 3}
   entryPoint: {fileID: 9016449047566717179, guid: a71e9478b8e75d440b4782963483b42f, type: 3}
   exitPoint: {fileID: 9016449047566717179, guid: 1082a2e6a44320845af3bbb18091da11, type: 3}
+  enemySpawner: {fileID: 964373034}
+  seed: 1
 --- !u!4 &1642061760
 Transform:
   m_ObjectHideFlags: 0
