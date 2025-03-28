@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour , IDamageable
     private InputAction _blockAction;
     
     // Move input and is dashing bool
+    public bool IsLockedOn { get; set; }
     private Vector2 _moveInput;
     private bool _isDashing;
     
