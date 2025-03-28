@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Managers
 {
@@ -10,6 +8,7 @@ namespace Managers
         [SerializeField] private PlayerController player;
         [SerializeField] private LevelManager levelManager;
         [SerializeField] private LevelUpSystem levelUpSystem;
+        [SerializeField] private UiManager uiManager;
 
         private void Awake()
         {
@@ -17,6 +16,8 @@ namespace Managers
             {
                 enemy.OnEnemyDeath += levelUpSystem.AddXp;
             }
+
+            player.OnHit += uiManager.UpdatePlayerHpBar;
         }
     }
 }

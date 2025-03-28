@@ -8,6 +8,8 @@ namespace Enemies.States
         private static readonly int Speed = Animator.StringToHash("Speed");
         
         private float _attackTimer;
+        
+        private bool _isColliderEnabled;
 
         public EnemyAttackState(Enemy enemy) : base(enemy)
         {
@@ -18,8 +20,6 @@ namespace Enemies.States
             Enemy.animator.SetFloat(Speed, 0f);
 
             _attackTimer = Enemy.attackDuration;
-            
-            Enemy.weapon.EnableCollider();
             
             if(!Enemy.animator) return;
             Enemy.animator.SetTrigger(Attack);
@@ -56,7 +56,7 @@ namespace Enemies.States
 
         public override void ExitState()
         {
-            Enemy.weapon.DisableCollider();
+            Enemy.weapon.ResetPlayerHit();
             
             if(!Enemy.animator) return;
             Enemy.animator.ResetTrigger(Attack);

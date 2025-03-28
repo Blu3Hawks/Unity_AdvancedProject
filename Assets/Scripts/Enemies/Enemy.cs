@@ -1,5 +1,6 @@
 using Enemies.States;
 using Interfaces;
+using UI;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,9 +15,10 @@ namespace Enemies
         public Animator animator;
         public Transform playerTransform;
         public Weapons.Weapon weapon;
+        [SerializeField] private HealthBar healthBar;
         
         [Header("Stats")]
-        [SerializeField] private float _maxHp;
+        [SerializeField] private float maxHp;
         
         [Header("Forces")]
         public float patrolSpeed = 1f;
@@ -31,8 +33,8 @@ namespace Enemies
         public Transform[] patrolPoints;
 
         [Header("Rewards")] 
-        [SerializeField] private float xp = 50f;
-        [SerializeField] private float xpModifier = 1f;
+        public float xp = 50f;
+        public float xpModifier = 1f;
         
         private float _curHp;
 
@@ -44,7 +46,7 @@ namespace Enemies
 
         protected void Awake()
         {
-            _curHp = _maxHp;
+            _curHp = maxHp;
             CurrentState = new EnemyIdleState(this);
         }
 
@@ -91,16 +93,28 @@ namespace Enemies
             return Vector3.Distance(transform.position, playerTransform.position) <= attackRange;
         }
 
+        public void EnableWeaponCollider()
+        {
+            weapon.EnableCollider();
+        }
+
+        public void DisableWeaponCollider()
+        {
+            weapon.DisableCollider();
+        }
+
         public virtual void TakeDamage(float damageAmount)
         {
             _curHp -= damageAmount;
+            
+            healthBar.UpdateHealthBar(_curHp, maxHp);
 
             if (_curHp <= 0)
             {
                 _curHp = 0;
                 OnEnemyDeath?.Invoke(xp * xpModifier);
                 animator.SetTrigger(Death);
-                Destroy(gameObject, 3f);
+                Destroy(gameObject, 0.5f);
                 return;
             }
             
