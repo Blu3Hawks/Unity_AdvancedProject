@@ -113,8 +113,8 @@ namespace Enemies
             {
                 _curHp = 0;
                 OnEnemyDeath?.Invoke(xp * xpModifier);
-                animator.SetTrigger(Death);
-                Destroy(gameObject, 0.5f);
+                TransitionToState(new EnemyDeathState(this));
+                Destroy(gameObject, 3f);
                 return;
             }
             

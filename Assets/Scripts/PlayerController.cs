@@ -161,6 +161,16 @@ public class PlayerController : MonoBehaviour , IDamageable
     {
         weapon.damage += 10f;
     }
+
+    public void EnableWeaponCollider()
+    {
+        weapon.EnableCollider();
+    }
+
+    public void DisableWeaponCollider()
+    {
+        weapon.DisableCollider();
+    }
     
     // IDamagable function
     public void TakeDamage(float damage)
