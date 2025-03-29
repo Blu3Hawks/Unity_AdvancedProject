@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UI;
 using UnityEngine;
@@ -11,17 +12,39 @@ namespace Managers
         [SerializeField] private GameManager gameManager;
         [SerializeField] private SettingManager settingManager;
         [SerializeField] private PauseManager pauseManager;
+        [SerializeField] private LevelUpSystem levelUpSystem;
 
         [Header("References")] 
-        [SerializeField] private GameObject pauseMenu;
+        
+        [Header("Sound UI")]
         [SerializeField] private Slider musicSlider;
         [SerializeField] private Slider sfxSlider;
+        
+        [Header("Pause Menu")]
+        [SerializeField] private GameObject pauseMenu;
+        
+        [Header("Character HUD")]
         [SerializeField] private HealthBar healthBar;
+        [SerializeField] private TextMeshProUGUI levelText;
+        [SerializeField] private TextMeshProUGUI damageMultiplier;
+        
+        [Header("Xp Bar")]
+        [SerializeField] private XpBar xpBar;
+        [SerializeField] private TextMeshProUGUI curXpTxt;
+        [SerializeField] private TextMeshProUGUI xpToNextLevelTxt;
 
-        private void Awake()
+        private void OnEnable()
         {
             pauseManager.OnPauseEnter += OpenPauseMenu;
             pauseManager.OnPauseClose += ClosePauseMenu;
+            levelUpSystem.OnLevelUp += SetLevelText;
+        }
+
+        private void OnDisable()
+        {
+            pauseManager.OnPauseEnter -= OpenPauseMenu;
+            pauseManager.OnPauseClose -= ClosePauseMenu;
+            levelUpSystem.OnLevelUp -= SetLevelText;
         }
 
         public void SetMusicSlider(float value)
@@ -49,6 +72,23 @@ namespace Managers
         public void UpdatePlayerHpBar(float curHp, float maxHp)
         {
             healthBar.UpdateHealthBar(curHp, maxHp);
+        }
+
+        public void UpdateXpBar(float xp)
+        {
+            xpBar.UpdateXpBar(levelUpSystem.CurXp, levelUpSystem.XpToNextLevel);
+            curXpTxt.text = levelUpSystem.CurXp.ToString("F0");
+            xpToNextLevelTxt.text = levelUpSystem.XpToNextLevel.ToString("F0");
+        }
+
+        private void SetLevelText(int level)
+        {
+            levelText.text = level.ToString("D2");
+        }
+
+        public void SetDamageMultiplierTxt(float multiplier)
+        {
+            damageMultiplier.text = multiplier.ToString("F2");
         }
     }
 }

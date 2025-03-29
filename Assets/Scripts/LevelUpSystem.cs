@@ -4,7 +4,7 @@ using UnityEngine.Events;
 public class LevelUpSystem : MonoBehaviour
 {
     // Events
-    public event UnityAction OnLevelUp;
+    public event UnityAction<int> OnLevelUp;
     
     [Header("Settings")] 
     [SerializeField] private int curLevel = 1;
@@ -14,31 +14,28 @@ public class LevelUpSystem : MonoBehaviour
     [Header("References")] 
     [SerializeField] private PlayerController player;
     
-    private float _curXp;
+    public float CurXp { get; private set; }
+    public float XpToNextLevel { get; private set; }
 
     public void AddXp(float xpAmount)
     {
-        _curXp += xpAmount;
+        CurXp += xpAmount;
         CheckLevelUp();
     }
 
     private void CheckLevelUp()
     {
-        if (_curXp >= GetXpToNextLevel())
+        if (CurXp >= GetXpToNextLevel())
         {
-            _curXp -= GetXpToNextLevel();
+            CurXp -= GetXpToNextLevel();
             ++curLevel;
-            LevelUp();
+            OnLevelUp?.Invoke(curLevel);
         }
     }
 
     private float GetXpToNextLevel()
     {
-        return baseXpRequirement * Mathf.Pow(xpGrowthFactor, curLevel - 1);
-    }
-
-    public void LevelUp()
-    {
-        OnLevelUp?.Invoke();
+        XpToNextLevel = baseXpRequirement * Mathf.Pow(xpGrowthFactor, curLevel - 1);
+        return XpToNextLevel;
     }
 }
