@@ -38,66 +38,70 @@ namespace Enemies
         
         private float _curHp;
 
-        protected EnemyState CurrentState;
+        private EnemyState _currentState;
         
         private static readonly int Speed = Animator.StringToHash("Speed");
         private static readonly int Damage = Animator.StringToHash("Damage");
-        private static readonly int Death = Animator.StringToHash("Death");
 
         protected void Awake()
         {
             _curHp = maxHp;
-            CurrentState = new EnemyIdleState(this);
+            _currentState = new EnemyIdleState(this);
         }
 
         protected virtual void Start()
         {
-            CurrentState.EnterState();
+            _currentState.EnterState();
         }
         
         protected virtual void Update()
         {
-            CurrentState.UpdateState();
+            _currentState.UpdateState();
         }
 
         protected virtual void FixedUpdate()
         {
-            CurrentState.FixedUpdateState();
+            _currentState.FixedUpdateState();
         }
 
         public void TransitionToState(EnemyState newState)
         {
-            CurrentState.ExitState();
-            CurrentState = newState;
-            CurrentState.EnterState();
+            _currentState.ExitState();
+            _currentState = newState;
+            _currentState.EnterState();
         }
-
+        
+        // Set the speed variable in animator for blent tree
         public virtual void SetMovementSpeed(float speed)
         {
             if (!animator) return;
             
             animator.SetFloat(Speed, speed);
         }
-
+        
+        // Return true if the player is close
         public bool IsPlayerDetected()
         {
             if (!playerTransform) return false;
             
             return Vector3.Distance(transform.position, playerTransform.position) <= detectionRange;
         }
-
+        
+        // Return true if the player is in attack range
         public bool IsPlayerInAttackRange()
         {
             if (!playerTransform) return false;
             
             return Vector3.Distance(transform.position, playerTransform.position) <= attackRange;
         }
-
+        
+        // This function called by the animator - Attack Animation event.
         public void EnableWeaponCollider()
         {
             weapon.EnableCollider();
         }
-
+        
+        // This function called by the animator - Attack Animation event.
         public void DisableWeaponCollider()
         {
             weapon.DisableCollider();
@@ -119,7 +123,6 @@ namespace Enemies
             }
             
             animator.SetTrigger(Damage);
-            Debug.Log(_curHp);
         }
     }
 }

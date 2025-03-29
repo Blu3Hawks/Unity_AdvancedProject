@@ -10,14 +10,28 @@ namespace Managers
         [SerializeField] private LevelUpSystem levelUpSystem;
         [SerializeField] private UiManager uiManager;
 
-        private void Awake()
+        private void OnEnable()
         {
             foreach (var enemy in levelManager.enemies)
             {
                 enemy.OnEnemyDeath += levelUpSystem.AddXp;
+                enemy.OnEnemyDeath += uiManager.UpdateXpBar;
             }
 
             player.OnHit += uiManager.UpdatePlayerHpBar;
+            player.OnParry += uiManager.SetDamageMultiplierTxt;
+        }
+
+        private void OnDisable()
+        {
+            foreach (var enemy in levelManager.enemies)
+            {
+                enemy.OnEnemyDeath -= levelUpSystem.AddXp;
+                enemy.OnEnemyDeath -= uiManager.UpdateXpBar;
+            }
+
+            player.OnHit -= uiManager.UpdatePlayerHpBar;
+            player.OnParry -= uiManager.SetDamageMultiplierTxt;
         }
     }
 }

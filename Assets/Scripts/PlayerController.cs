@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour , IDamageable
     private InputAction _blockAction;
     
     // Move input and is dashing bool
+    public bool IsLockedOn { get; set; }
     private Vector2 _moveInput;
     private bool _isDashing;
     
@@ -157,16 +158,19 @@ public class PlayerController : MonoBehaviour , IDamageable
         return _controls.Player.Move.ReadValue<Vector2>();
     }
     
-    private void LevelUp()
+    // Level up your weapon dmg
+    private void LevelUp(int curLevel)
     {
-        weapon.damage += 10f;
+        weapon.SetBaseDamage(5f);
     }
-
+    
+    // This function called by the animator - Attack Animation event.
     public void EnableWeaponCollider()
     {
         weapon.EnableCollider();
     }
-
+    
+    // This function called by the animator - Attack Animation event.
     public void DisableWeaponCollider()
     {
         weapon.DisableCollider();
@@ -207,6 +211,7 @@ public class PlayerController : MonoBehaviour , IDamageable
         }
     }
     
+    // Draw the sphere that checks for ground check
     public void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

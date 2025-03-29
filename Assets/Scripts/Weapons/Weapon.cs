@@ -32,6 +32,11 @@ namespace Weapons
         {
             damage = baseDamage * multiplier;
         }
+
+        public virtual void SetBaseDamage(float damageToAdd)
+        {
+            baseDamage += damageToAdd;
+        }
         
         public virtual void ResetPlayerHit(){}
     }
