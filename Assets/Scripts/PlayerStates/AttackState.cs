@@ -20,7 +20,7 @@ namespace PlayerStates
             
             _attackDuration = _attackAnimation.length / 1.65f;
             
-            Player.weapon.EnableCollider();
+            //Player.weapon.EnableCollider();
             
             Player.StartCoroutine(EndOfAttack());
         }
@@ -29,7 +29,7 @@ namespace PlayerStates
         {
             Player.animator.ResetTrigger(Attack);
             
-            Player.weapon.DisableCollider();
+            //Player.weapon.DisableCollider();
         }
 
         public override void HandleInput()
