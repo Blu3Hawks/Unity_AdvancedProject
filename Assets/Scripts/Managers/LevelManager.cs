@@ -5,6 +5,9 @@ namespace Managers
 {
     public class LevelManager : MonoBehaviour
     {
+        private int currentLevel;
+        public int CurrentLevel { get { return currentLevel; } }
+
         [SerializeField] public List<Coin> coins;
         public List<Enemies.Enemy> enemies;
 
