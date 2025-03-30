@@ -143,7 +143,7 @@ public class RandomEnemySpawner : MonoBehaviour
     {
         foreach (var enemy in ListOfEnemies)
         {
-            enemy.InitializeEnemyReferences(playerTransform);
+            enemy.InitializeEnemyReferences(playerTransform, mainCamera);
         }
     }
 
@@ -196,34 +196,34 @@ public class RandomEnemySpawner : MonoBehaviour
 
     public void SaveEnemyPositions()
     {
-        DataPersistenceManager.instance.GameData.crusherSkeletonPositions.Clear();
-        DataPersistenceManager.instance.GameData.warriorSkeletonPositions.Clear();
-        DataPersistenceManager.instance.GameData.crusherPatrolPoints1.Clear();
-        DataPersistenceManager.instance.GameData.crusherPatrolPoints2.Clear();
-        DataPersistenceManager.instance.GameData.warriorPatrolPoints1.Clear();
-        DataPersistenceManager.instance.GameData.warriorPatrolPoints2.Clear();
+        DataPersistenceManager.Instance.GameData.crusherSkeletonPositions.Clear();
+        DataPersistenceManager.Instance.GameData.warriorSkeletonPositions.Clear();
+        DataPersistenceManager.Instance.GameData.crusherPatrolPoints1.Clear();
+        DataPersistenceManager.Instance.GameData.crusherPatrolPoints2.Clear();
+        DataPersistenceManager.Instance.GameData.warriorPatrolPoints1.Clear();
+        DataPersistenceManager.Instance.GameData.warriorPatrolPoints2.Clear();
 
         foreach (GameObject enemy in spawnedCrusherEnemies)
         {
-            DataPersistenceManager.instance.GameData.crusherSkeletonPositions.Add(enemy.transform.position);
+            DataPersistenceManager.Instance.GameData.crusherSkeletonPositions.Add(enemy.transform.position);
         }
 
         foreach (GameObject enemy in spawnedWarriorEnemies)
         {
-            DataPersistenceManager.instance.GameData.warriorSkeletonPositions.Add(enemy.transform.position);
+            DataPersistenceManager.Instance.GameData.warriorSkeletonPositions.Add(enemy.transform.position);
         }
 
-        DataPersistenceManager.instance.GameData.crusherPatrolPoints1.AddRange(crusherPatrolPoints1);
-        DataPersistenceManager.instance.GameData.crusherPatrolPoints2.AddRange(crusherPatrolPoints2);
-        DataPersistenceManager.instance.GameData.warriorPatrolPoints1.AddRange(warriorPatrolPoints1);
-        DataPersistenceManager.instance.GameData.warriorPatrolPoints2.AddRange(warriorPatrolPoints2);
+        DataPersistenceManager.Instance.GameData.crusherPatrolPoints1.AddRange(crusherPatrolPoints1);
+        DataPersistenceManager.Instance.GameData.crusherPatrolPoints2.AddRange(crusherPatrolPoints2);
+        DataPersistenceManager.Instance.GameData.warriorPatrolPoints1.AddRange(warriorPatrolPoints1);
+        DataPersistenceManager.Instance.GameData.warriorPatrolPoints2.AddRange(warriorPatrolPoints2);
 
-        DataPersistenceManager.instance.SaveGame();
+        DataPersistenceManager.Instance.SaveGame();
     }
 
     public void LoadEnemyPositions()
     {
-        var data = DataPersistenceManager.instance.GameData;
+        var data = DataPersistenceManager.Instance.GameData;
 
         // Safety checks for null or empty
         bool hasCrushers = data.crusherSkeletonPositions != null && data.crusherSkeletonPositions.Count > 0;

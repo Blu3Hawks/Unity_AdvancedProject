@@ -27,19 +27,19 @@ public class SaveSlotsMenu : Menu
         DisableMenuButtons();
         if (isLoadingGame)
         {
-            DataPersistenceManager.instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
+            DataPersistenceManager.Instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
             SaveGameAndLoadScene();
         }
         else if (saveSlot.hasData)
         {
             confirmationMenu.ActivateMenu(
-                "Starting a new game with this save slot will override the existing saved data. Are you sure?",
+                "Starting a new game with this save slot will override the existing saved data. Are you sure",
                 //in case we pressed 'yes'
                 () =>
                 {
 
-                    DataPersistenceManager.instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
-                    DataPersistenceManager.instance.NewGame();
+                    DataPersistenceManager.Instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
+                    DataPersistenceManager.Instance.NewGame();
                     SaveGameAndLoadScene();
                 },
                 //in case we pressed 'cancel'
@@ -53,8 +53,8 @@ public class SaveSlotsMenu : Menu
         }
         else
         {
-            DataPersistenceManager.instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
-            DataPersistenceManager.instance.NewGame();
+            DataPersistenceManager.Instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
+            DataPersistenceManager.Instance.NewGame();
             SaveGameAndLoadScene();
         }
 
@@ -62,7 +62,7 @@ public class SaveSlotsMenu : Menu
 
     private void SaveGameAndLoadScene()
     {
-        DataPersistenceManager.instance.SaveGame();
+        DataPersistenceManager.Instance.SaveGame();
         SceneManager.LoadSceneAsync("Dungeon 1");
     }
 
@@ -89,7 +89,7 @@ public class SaveSlotsMenu : Menu
 
         this.isLoadingGame = isLoadingGame;
 
-        Dictionary<string, GameData> profilesGameData = DataPersistenceManager.instance.GetAllProfilesData();
+        Dictionary<string, GameData> profilesGameData = DataPersistenceManager.Instance.GetAllProfilesData();
 
         GameObject firstSelected = backButton.gameObject;
         foreach (SaveSlot saveSlot in saveSlots)
@@ -119,10 +119,10 @@ public class SaveSlotsMenu : Menu
         DisableMenuButtons();
 
         confirmationMenu.ActivateMenu(
-            "Are you sure you want to delete this saved file?",
+            "Are you sure you want to delete this saved file",
             () =>
             {
-                DataPersistenceManager.instance.DeleteProfileId(saveSlot.GetProfileId());
+                DataPersistenceManager.Instance.DeleteProfileId(saveSlot.GetProfileId());
                 ActivateMenu(isLoadingGame);
             },
             () =>

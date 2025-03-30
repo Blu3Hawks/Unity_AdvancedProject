@@ -104,9 +104,9 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
         _currentState = new IdleState(this, cameraTransform);
         _currentState.EnterState();
         //hen's logic
-        if (DataPersistenceManager.instance.GameData.PlayerPosition != Vector3.zero)
+        if (DataPersistenceManager.Instance.GameData.PlayerPosition != Vector3.zero)
         {
-            transform.position = DataPersistenceManager.instance.GameData.PlayerPosition;
+            transform.position = DataPersistenceManager.Instance.GameData.PlayerPosition;
         }
         else
         {
@@ -245,24 +245,24 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
         {
             transform.position = entryPointPosition;
         }
-        _curHp = DataPersistenceManager.instance.GameData.playerCurrentHealth;
-        levelUpSystem.CurXp = DataPersistenceManager.instance.GameData.playerCurrentXp;
-        levelUpSystem.CurrentLevel = DataPersistenceManager.instance.GameData.playerLevel;
+        _curHp = DataPersistenceManager.Instance.GameData.playerCurrentHealth;
+        levelUpSystem.CurXp = DataPersistenceManager.Instance.GameData.playerCurrentXp;
+        levelUpSystem.CurrentLevel = DataPersistenceManager.Instance.GameData.playerLevel;
     }
 
     public void SaveData(GameData data)
     {
-        DataPersistenceManager.instance.GameData.PlayerPosition = transform.position;
-        DataPersistenceManager.instance.GameData.playerCurrentHealth = _curHp;
-        DataPersistenceManager.instance.GameData.playerCurrentXp = levelUpSystem.CurXp;
-        DataPersistenceManager.instance.GameData.playerLevel = levelUpSystem.CurrentLevel;
+        DataPersistenceManager.Instance.GameData.PlayerPosition = transform.position;
+        DataPersistenceManager.Instance.GameData.playerCurrentHealth = _curHp;
+        DataPersistenceManager.Instance.GameData.playerCurrentXp = levelUpSystem.CurXp;
+        DataPersistenceManager.Instance.GameData.playerLevel = levelUpSystem.CurrentLevel;
     }
 
     private void OnApplicationQuit()
     {
         SaveData(null);
-        DataPersistenceManager.instance.GameData.PlayerPosition = transform.position;
-        Debug.Log(DataPersistenceManager.instance.GameData.PlayerPosition);
+        DataPersistenceManager.Instance.GameData.PlayerPosition = transform.position;
+        Debug.Log(DataPersistenceManager.Instance.GameData.PlayerPosition);
     }
 
     public void SetEntryPointAndCamera(Vector2 entryPoint, Transform cameraTransform)

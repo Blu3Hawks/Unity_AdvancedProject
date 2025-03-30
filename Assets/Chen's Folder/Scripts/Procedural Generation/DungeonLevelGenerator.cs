@@ -82,7 +82,7 @@ public class DungeonLevelGenerator : MonoBehaviour
 
     private void Start()
     {
-        gameData = DataPersistenceManager.instance.GetSavedGameData();
+        gameData = DataPersistenceManager.Instance.GetSavedGameData();
         if (gameData != null)
         {
             seed = gameData.currentDungeonSeed;
@@ -121,10 +121,10 @@ public class DungeonLevelGenerator : MonoBehaviour
     private void HandleEnteringNextLevel()
     {
         level++;
-        DataPersistenceManager.instance.GameData.dungeonLevel = level; // get the level saved.
+        DataPersistenceManager.Instance.GameData.dungeonLevel = level; // get the level saved.
         useRandomSeed = true;
         seed = random.Range(int.MinValue, int.MaxValue); // get new seed
-        DataPersistenceManager.instance.GameData.currentDungeonSeed = seed;
+        DataPersistenceManager.Instance.GameData.currentDungeonSeed = seed;
 
         // generate a new level
         GenerateLevel();
@@ -560,7 +560,7 @@ public class DungeonLevelGenerator : MonoBehaviour
 
     private void SaveValues()
     {
-        DataPersistenceManager.instance.GameData.PlayerPosition = new Vector3(currentEntryRoom.CenterPoint.x, 1, currentEntryRoom.CenterPoint.y + 2);
+        DataPersistenceManager.Instance.GameData.PlayerPosition = new Vector3(currentEntryRoom.CenterPoint.x, 1, currentEntryRoom.CenterPoint.y + 2);
         if (characterController != null && characterController.IsDead)
         {
             Debug.LogWarning("Game not saved — player is dead.");
@@ -570,28 +570,31 @@ public class DungeonLevelGenerator : MonoBehaviour
         enemySpawner.SaveEnemyPositions();
 
         // Save player state
-        DataPersistenceManager.instance.GameData.playerCurrentHealth = characterController._curHp;
-        DataPersistenceManager.instance.GameData.playerCurrentXp = characterController.LevelUpSystem.CurXp;
-        DataPersistenceManager.instance.GameData.playerLevel = characterController.LevelUpSystem.CurrentLevel;
+        DataPersistenceManager.Instance.GameData.playerCurrentHealth = characterController._curHp;
+        DataPersistenceManager.Instance.GameData.playerCurrentXp = characterController.LevelUpSystem.CurXp;
+        DataPersistenceManager.Instance.GameData.playerLevel = characterController.LevelUpSystem.CurrentLevel;
         
 
-        DataPersistenceManager.instance.SaveGame();
-        DataPersistenceManager.instance.GameData.currentDungeonSeed = seed;
-        DataPersistenceManager.instance.GameData.useRandomSeed = false;
-        DataPersistenceManager.instance.GameData.dungeonLevel = level;
-        DataPersistenceManager.instance.GameData.PlayerPosition = characterObject.transform.position;
+        DataPersistenceManager.Instance.SaveGame();
+        DataPersistenceManager.Instance.GameData.currentDungeonSeed = seed;
+        DataPersistenceManager.Instance.GameData.useRandomSeed = false;
+        DataPersistenceManager.Instance.GameData.dungeonLevel = level;
+        DataPersistenceManager.Instance.GameData.PlayerPosition = characterObject.transform.position;
     }
 
     private void LoadValues()
     {
-        DataPersistenceManager.instance.GameData.currentDungeonSeed = seed;
-        DataPersistenceManager.instance.GameData.useRandomSeed = useRandomSeed;
-        DataPersistenceManager.instance.GameData.dungeonLevel = level;
+        DataPersistenceManager.Instance.GameData.currentDungeonSeed = seed;
+        DataPersistenceManager.Instance.GameData.useRandomSeed = useRandomSeed;
+        DataPersistenceManager.Instance.GameData.dungeonLevel = level;
 
-        // Load player state
+        // Save player state
+       //// DataPersistenceManager.Instance.GameData.playerCurrentHealth = characterController._curHp;
+        //DataPersistenceManager.Instance.GameData.playerCurrentXp = characterController.LevelUpSystem.CurXp;
+        //DataPersistenceManager.Instance.GameData.playerLevel = characterController.LevelUpSystem.CurrentLevel;
 
-        //characterController.LevelUpSystem.CurXp = DataPersistenceManager.instance.GameData.playerCurrentXp;
-        //characterController.LevelUpSystem.CurrentLevel = DataPersistenceManager.instance.GameData.playerLevel;
-        //characterController.transform.position = DataPersistenceManager.instance.GameData.PlayerPosition;
+        DataPersistenceManager.Instance.SaveGame();
+        DataPersistenceManager.Instance.GameData.currentDungeonSeed = seed;
+        DataPersistenceManager.Instance.GameData.useRandomSeed = false;
     }
 }

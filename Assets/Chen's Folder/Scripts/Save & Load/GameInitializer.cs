@@ -55,27 +55,28 @@ public class GameInitializer : MonoBehaviour
         levelGenerator.characterController = MainHeroController;
 
         // Load player state
-        MainHeroController._curHp = DataPersistenceManager.instance.GameData.playerCurrentHealth;
-        MainHeroController.LevelUpSystem.CurXp = DataPersistenceManager.instance.GameData.playerCurrentXp;
-        MainHeroController.LevelUpSystem.CurrentLevel = DataPersistenceManager.instance.GameData.playerLevel;
+        MainHeroController._curHp = DataPersistenceManager.Instance.GameData.playerCurrentHealth;
+        MainHeroController.LevelUpSystem.CurXp = DataPersistenceManager.Instance.GameData.playerCurrentXp;
+        MainHeroController.LevelUpSystem.CurrentLevel = DataPersistenceManager.Instance.GameData.playerLevel;
 
         //here we will set the camera's following to the new hero's transform
         cinemachineFollowCamera.Follow = MainHero.transform;
 
-        if (DataPersistenceManager.instance.HasGameData() && DataPersistenceManager.instance.GameData.PlayerPosition != Vector3.zero)
+        if (DataPersistenceManager.Instance.HasGameData() && DataPersistenceManager.Instance.GameData.PlayerPosition != Vector3.zero)
         {
-            DataPersistenceManager.instance.LoadGame();
+            DataPersistenceManager.Instance.LoadGame();
             IDataPersistence dataPersistence = MainHeroController;
             if (dataPersistence != null)
             {
-                dataPersistence.LoadData(DataPersistenceManager.instance.GameData);
+                dataPersistence.LoadData(DataPersistenceManager.Instance.GameData);
             }
-            MainHero.transform.localPosition = DataPersistenceManager.instance.GameData.PlayerPosition;
-            MainHeroController._curHp = DataPersistenceManager.instance.GameData.playerCurrentHealth;
+            MainHeroController.transform.position = DataPersistenceManager.Instance.GameData.PlayerPosition;
+            Debug.Log(MainHeroController.transform.position);
+            MainHeroController._curHp = DataPersistenceManager.Instance.GameData.playerCurrentHealth;
         }
         else
         {
-            DataPersistenceManager.instance.NewGame();
+            DataPersistenceManager.Instance.NewGame();
             enemySpawner.SpawnEnemies(levelGenerator.Level); //here we will spawn enemies if we enter to a new game.
             MainHeroController.SetEntryPointAndCamera(levelGenerator.EntryPointRoom.CenterPoint, mainCamera.transform);
             MainHeroController._curHp = MainHeroController.MaxHealth;
@@ -103,7 +104,7 @@ public class GameInitializer : MonoBehaviour
     {
         foreach (Enemy enemy in enemySpawner.ListOfEnemies)
         {
-            enemy.InitializeEnemyReferences(MainHero.transform);
+            enemy.InitializeEnemyReferences(MainHero.transform, mainCamera);
         }
     }
 
@@ -129,9 +130,9 @@ public class GameInitializer : MonoBehaviour
     private void OnApplicationQuit()
     {
         // Save player state
-        DataPersistenceManager.instance.GameData.playerCurrentHealth = MainHeroController._curHp;
-        DataPersistenceManager.instance.GameData.playerCurrentXp = MainHeroController.LevelUpSystem.CurXp;
-        DataPersistenceManager.instance.GameData.playerLevel = MainHeroController.LevelUpSystem.CurrentLevel;
+        DataPersistenceManager.Instance.GameData.playerCurrentHealth = MainHeroController._curHp;
+        DataPersistenceManager.Instance.GameData.playerCurrentXp = MainHeroController.LevelUpSystem.CurXp;
+        DataPersistenceManager.Instance.GameData.playerLevel = MainHeroController.LevelUpSystem.CurrentLevel;
 
     }
 }

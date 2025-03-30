@@ -22,7 +22,7 @@ public class MainMenu : Menu
 
     public void DisableButtonsAccordingToData()
     {
-        if (!DataPersistenceManager.instance.HasGameData())
+        if (!DataPersistenceManager.Instance.HasGameData())
         {
             loadGameButton.interactable = false;
         }

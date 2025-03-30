@@ -4,7 +4,7 @@ namespace UI
 {
     public class LookAtCamera : MonoBehaviour
     {
-        [SerializeField] private Camera mainCamera;
+        public Camera mainCamera;
 
         private void LateUpdate()
         {

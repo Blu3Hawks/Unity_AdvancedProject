@@ -112,14 +112,14 @@ namespace Managers
         {
             Time.timeScale = 1f;
             SceneManager.LoadSceneAsync("Main Menu");
-            DataPersistenceManager.instance.DeleteProfileId(DataPersistenceManager.instance.SelectedProfileId);
+            DataPersistenceManager.Instance.DeleteProfileId(DataPersistenceManager.Instance.SelectedProfileId);
         }
 
         public void OnExitGame()
         {
             Time.timeScale = 1f;
             Application.Quit();
-            DataPersistenceManager.instance.DeleteProfileId(DataPersistenceManager.instance.SelectedProfileId);
+            DataPersistenceManager.Instance.DeleteProfileId(DataPersistenceManager.Instance.SelectedProfileId);
         }
 
     }
