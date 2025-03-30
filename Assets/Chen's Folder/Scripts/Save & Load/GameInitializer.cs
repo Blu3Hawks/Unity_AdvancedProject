@@ -47,6 +47,7 @@ public class GameInitializer : MonoBehaviour
         // Subscribe to events
         MainHeroController.OnHit += uiManager.UpdatePlayerHpBar;
         MainHeroController.OnParry += uiManager.SetDamageMultiplierTxt;
+        uiManager.AddSubscribersToPlayerDeath(MainHeroController);
 
         // Get additional components
         var playerInput = MainHero.GetComponent<PlayerInput>();
@@ -107,10 +108,18 @@ public class GameInitializer : MonoBehaviour
         uiManager.SetupPlayerScripts(levelUpSystem);
 
         gameManager.SetupEvents();
-
-        playerInput.actions["Pause"].performed += pausedManager.OnPause;
+        StartCoroutine(InitializeUiManagerEvent(playerInput));
     }
 
+    private IEnumerator InitializeUiManagerEvent(PlayerInput playerInput)
+    {
+        while(pausedManager == null)
+        { yield return new WaitForSeconds(0.01f); 
+        }
+        playerInput.actions["Pause"].performed += pausedManager.OnPause;
+
+
+    }
     private void OnApplicationQuit()
     {
         // Save player state

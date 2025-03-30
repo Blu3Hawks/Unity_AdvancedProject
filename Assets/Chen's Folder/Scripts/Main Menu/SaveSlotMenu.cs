@@ -46,7 +46,6 @@ public class SaveSlotsMenu : Menu
                 () =>
                 {
 
-                    //TODO - come back to this
                     this.ActivateMenu(isLoadingGame);
                 }
                 );

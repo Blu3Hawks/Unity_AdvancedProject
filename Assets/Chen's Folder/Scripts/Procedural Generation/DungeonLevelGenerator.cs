@@ -589,6 +589,7 @@ public class DungeonLevelGenerator : MonoBehaviour
         DataPersistenceManager.instance.GameData.dungeonLevel = level;
 
         // Load player state
+
         characterController._curHp = DataPersistenceManager.instance.GameData.playerCurrentHealth;
         characterController.LevelUpSystem.CurXp = DataPersistenceManager.instance.GameData.playerCurrentXp;
         characterController.LevelUpSystem.CurrentLevel = DataPersistenceManager.instance.GameData.playerLevel;

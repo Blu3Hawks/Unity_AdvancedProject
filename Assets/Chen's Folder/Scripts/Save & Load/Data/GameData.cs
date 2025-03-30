@@ -42,15 +42,3 @@ public class GameData
     }
 
 }
-
-[System.Serializable]
-public class CrusherSaveData
-{
-    public Vector3 position;
-}
-
-[System.Serializable]
-public class WarriorSaveData
-{
-    public Vector3 position;
-}

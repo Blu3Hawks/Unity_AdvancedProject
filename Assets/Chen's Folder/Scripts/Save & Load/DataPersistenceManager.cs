@@ -24,6 +24,7 @@ public class DataPersistenceManager : MonoBehaviour
     private FileDataHandler dataHandler;
 
     public GameData GameData { get { return gameData; } }
+    public string SelectedProfileId {  get { return selectedProfileId; } }
 
     private void Awake()
     {

@@ -1,4 +1,5 @@
 using Enemies;
+using System.Collections;
 using UnityEngine;
 
 namespace Managers
@@ -27,8 +28,14 @@ namespace Managers
                 enemy.OnEnemyDeath += levelUpSystem.AddXp;
                 enemy.OnEnemyDeath += uiManager.UpdateXpBar;
             }
+            StartCoroutine(AddingPlayerSFX());
+        }
 
+        private IEnumerator AddingPlayerSFX()
+        {
+            yield return new WaitForSeconds(0.04f);
             player.OnParry += audioManager.PlayParrySfx;
+
         }
 
         public void RemoveEnemiesEvents()
