@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class LockOnSystem : MonoBehaviour
 {
-    [SerializeField] private Camera mainCamera;
+    public Camera mainCamera;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private float rayDistance = 15f;
     [SerializeField] private LayerMask enemyLayer;

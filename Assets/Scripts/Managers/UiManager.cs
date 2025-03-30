@@ -76,7 +76,7 @@ namespace Managers
             xpToNextLevelTxt.text = levelUpSystem.XpToNextLevel.ToString("F0");
         }
 
-        private void SetLevelText(int level)
+        public void SetLevelText(int level)
         {
             levelText.text = level.ToString("D2");
         }

@@ -1497,6 +1497,7 @@ MonoBehaviour:
   blockAnimation: {fileID: -203655887218126122, guid: a650d483b47d89244b30bbd42e1b8a0f, type: 3}
   weapon: {fileID: 4300022962823809390}
   levelUpSystem: {fileID: 2693996892309678283}
+  lockOnSystem: {fileID: 8638325677122300368}
   moveSpeed: 3
   jumpForce: 5
   speedRotation: 10
@@ -1510,6 +1511,8 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  curHp: 0
+  entryPointPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &8638325677122300368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1541,7 +1544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7176cc2e3bc44bfa8e8635fd16d91a29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curLevel: 1
+  currentLevel: 1
   baseXpRequirement: 100
   xpGrowthFactor: 1.2
   player: {fileID: 4675663530663476010}
