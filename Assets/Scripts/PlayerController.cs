@@ -1,11 +1,9 @@
-using Chen_s_Folder.Scripts.Save___Load;
-using Chen_s_Folder.Scripts.Save___Load.Data;
 using Interfaces;
 using PlayerStates;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using Weapons;
 
 public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
@@ -45,7 +43,7 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
     [SerializeField] private float groundRadius = 0.5f;
     [SerializeField] private LayerMask groundLayer;
 
-    public float curHp;
+    public float _curHp;
 
     // Player state
     private PlayerState _currentState;
@@ -87,6 +85,8 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
         _blockAction = _controls.Player.Block;
     }
 
+
+
     private void OnEnable()
     {
         _controls.Enable();
@@ -103,11 +103,10 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
     {
         _currentState = new IdleState(this, cameraTransform);
         _currentState.EnterState();
-        TakeDamage(0); //just to reset these things
         //hen's logic
-        if (DataPersistenceManager.Instance.GameData.playerPosition != Vector3.zero)
+        if (DataPersistenceManager.Instance.GameData.PlayerPosition != Vector3.zero)
         {
-            transform.position = DataPersistenceManager.Instance.GameData.playerPosition;
+            transform.position = DataPersistenceManager.Instance.GameData.PlayerPosition;
         }
         else
         {
@@ -206,11 +205,11 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
 
         if (IsBlocking)
         {
-            curHp -= damage * damageReduction;
+            _curHp -= damage * damageReduction;
         }
         else
         {
-            curHp -= damage;
+            _curHp -= damage;
         }
 
         // Reset damage multiplier
@@ -218,11 +217,11 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
         weapon.SetDamageWithMultiplier(_damageMultiplier);
 
         // Invoke On Hit event
-        OnHit?.Invoke(curHp, maxHp);
+        OnHit?.Invoke(_curHp, maxHp);
 
-        if (curHp <= 0f)
+        if (_curHp <= 0f)
         {
-            curHp = 0f;
+            _curHp = 0f;
             IsDead = true;
             OnPlayerDeath?.Invoke();
         }
@@ -238,32 +237,32 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
     //hen's logic
     public void LoadData(GameData data)
     {
-        if (data.playerPosition != Vector3.zero)
+        if (data.PlayerPosition != Vector3.zero)
         {
-            transform.position = data.playerPosition;
+            transform.position = data.PlayerPosition;
         }
         else
         {
             transform.position = entryPointPosition;
         }
-        curHp = DataPersistenceManager.Instance.GameData.playerCurrentHealth;
+        _curHp = DataPersistenceManager.Instance.GameData.playerCurrentHealth;
         levelUpSystem.CurXp = DataPersistenceManager.Instance.GameData.playerCurrentXp;
-        levelUpSystem.currentLevel = DataPersistenceManager.Instance.GameData.playerLevel;
+        levelUpSystem.CurrentLevel = DataPersistenceManager.Instance.GameData.playerLevel;
     }
 
     public void SaveData(GameData data)
     {
-        DataPersistenceManager.Instance.GameData.playerPosition = transform.position;
-        DataPersistenceManager.Instance.GameData.playerCurrentHealth = curHp;
+        DataPersistenceManager.Instance.GameData.PlayerPosition = transform.position;
+        DataPersistenceManager.Instance.GameData.playerCurrentHealth = _curHp;
         DataPersistenceManager.Instance.GameData.playerCurrentXp = levelUpSystem.CurXp;
-        DataPersistenceManager.Instance.GameData.playerLevel = levelUpSystem.currentLevel;
+        DataPersistenceManager.Instance.GameData.playerLevel = levelUpSystem.CurrentLevel;
     }
 
     private void OnApplicationQuit()
     {
         SaveData(null);
-        DataPersistenceManager.Instance.GameData.playerPosition = transform.position;
-        Debug.Log(DataPersistenceManager.Instance.GameData.playerPosition);
+        DataPersistenceManager.Instance.GameData.PlayerPosition = transform.position;
+        Debug.Log(DataPersistenceManager.Instance.GameData.PlayerPosition);
     }
 
     public void SetEntryPointAndCamera(Vector2 entryPoint, Transform cameraTransform)

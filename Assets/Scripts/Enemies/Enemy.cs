@@ -127,10 +127,10 @@ namespace Enemies
             animator.SetTrigger(Damage);
         }
 
-        public void InitializeEnemyReferences(Transform heroTransform)
+        public void InitializeEnemyReferences(Transform heroTransform, Camera camera)
         {
             playerTransform = heroTransform;
-
+            lookAtCamera.mainCamera = camera;
         }
     }
 }

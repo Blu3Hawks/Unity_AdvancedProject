@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 public class DataPersistenceManager : MonoBehaviour
 {
-    public static DataPersistenceManager instance { get; private set; }
+    public static DataPersistenceManager Instance { get; private set; }
 
     private GameData gameData;
 
@@ -28,13 +28,13 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null)
+        if (Instance != null)
         {
             Debug.LogError("there's already an instance");
             Destroy(this.gameObject);
             return;
         }
-        instance = this;
+        Instance = this;
         DontDestroyOnLoad(this.gameObject);
 
         if (disableDataPersistence)
