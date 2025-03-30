@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
     public bool IsBlocking { get; set; }
     public bool IsDead { get; private set; } = false;
     public LevelUpSystem LevelUpSystem { get { return levelUpSystem; } }
+    public float MaxHealth { get { return maxHp; } }
 
     private void Awake()
     {
@@ -97,7 +98,6 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
 
     private void Start()
     {
-        _curHp = maxHp;
         _currentState = new IdleState(this, cameraTransform);
         _currentState.EnterState();
         TakeDamage(0); //just to reset these things
