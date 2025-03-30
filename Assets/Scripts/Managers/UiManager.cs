@@ -85,6 +85,11 @@ namespace Managers
             damageMultiplier.text = multiplier.ToString("F2");
         }
 
+        public void ResetDamageMultiplier(float curHp, float maxHp)
+        {
+            damageMultiplier.text = 1f.ToString("F2");
+        }
+
         public void SetupPlayerScripts(LevelUpSystem levelUpSystem)
         {
             this.levelUpSystem = levelUpSystem;

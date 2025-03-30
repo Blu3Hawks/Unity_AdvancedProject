@@ -10,12 +10,14 @@ namespace Managers
         [SerializeField] private RandomEnemySpawner enemySpawner;
         [SerializeField] private LevelUpSystem levelUpSystem;
         [SerializeField] private UiManager uiManager;
+        [SerializeField] private GameplayAudioManager audioManager;
 
 
         private void OnDisable()
         {
             player.OnHit -= uiManager.UpdatePlayerHpBar;
             player.OnParry -= uiManager.SetDamageMultiplierTxt;
+            player.OnParry -= audioManager.PlayParrySfx;
         }
 
         public void SetupEvents()
@@ -25,6 +27,8 @@ namespace Managers
                 enemy.OnEnemyDeath += levelUpSystem.AddXp;
                 enemy.OnEnemyDeath += uiManager.UpdateXpBar;
             }
+
+            player.OnParry += audioManager.PlayParrySfx;
         }
 
         public void RemoveEnemiesEvents()
