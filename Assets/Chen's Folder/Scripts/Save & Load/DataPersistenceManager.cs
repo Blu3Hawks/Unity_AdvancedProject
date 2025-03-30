@@ -72,7 +72,6 @@ public class DataPersistenceManager : MonoBehaviour
     }
     public void NewGame()
     {
-        Debug.Log("new game has made");
         gameData = new GameData();
         SaveGame();
     }

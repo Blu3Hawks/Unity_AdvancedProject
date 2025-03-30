@@ -5,16 +5,16 @@ public class LevelUpSystem : MonoBehaviour
 {
     // Events
     public event UnityAction<int> OnLevelUp;
-    
-    [Header("Settings")] 
-    [SerializeField] private int curLevel = 1;
+
+    [Header("Settings")]
+    public int CurrentLevel = 1;
     [SerializeField] private float baseXpRequirement = 100f;
     [SerializeField] private float xpGrowthFactor = 1.2f;
 
-    [Header("References")] 
+    [Header("References")]
     [SerializeField] private PlayerController player;
-    
-    public float CurXp { get; private set; }
+
+    public float CurXp { get; set; }
     public float XpToNextLevel { get; private set; }
 
     public void AddXp(float xpAmount)
@@ -28,14 +28,14 @@ public class LevelUpSystem : MonoBehaviour
         if (CurXp >= GetXpToNextLevel())
         {
             CurXp -= GetXpToNextLevel();
-            ++curLevel;
-            OnLevelUp?.Invoke(curLevel);
+            ++CurrentLevel;
+            OnLevelUp?.Invoke(CurrentLevel);
         }
     }
 
     private float GetXpToNextLevel()
     {
-        XpToNextLevel = baseXpRequirement * Mathf.Pow(xpGrowthFactor, curLevel - 1);
+        XpToNextLevel = baseXpRequirement * Mathf.Pow(xpGrowthFactor, CurrentLevel - 1);
         return XpToNextLevel;
     }
 }

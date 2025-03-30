@@ -1,51 +1,186 @@
+using Enemies;
+using Enemies.States;
+using Managers;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RandomEnemySpawner : MonoBehaviour
 {
-    
+    [SerializeField] private EnemyCrusherSkeletonData crusherSkeleton;
+    [SerializeField] private EnemyWarriorSkeletonData warriorSkeleton;
+    [SerializeField] private Camera mainCamera;
+
+    //lists and stuff
+    private List<ScriptableObject> enemyDataList;
+    private List<float> spawnedEnemiesXP;
+    private HashSet<Vector2Int> usedPositions;
+    private List<GameObject> spawnedCrusherEnemies;
+    private List<GameObject> spawnedWarriorEnemies;
     private List<Room> listOfRooms;
-    [SerializeField] private List<EnemyData> enemyDataList;
+
+    private Transform playerTransform;
+
+    public List<Enemy> ListOfEnemies { get; private set; }
+
+    //lists to store patrol points
+    private List<Vector3> crusherPatrolPoints1;
+    private List<Vector3> crusherPatrolPoints2;
+    private List<Vector3> warriorPatrolPoints1;
+    private List<Vector3> warriorPatrolPoints2;
+
+    private void Start()
+    {
+        enemyDataList = new List<ScriptableObject> { crusherSkeleton, warriorSkeleton };
+        spawnedEnemiesXP = new List<float>();
+        usedPositions = new HashSet<Vector2Int>();
+        spawnedCrusherEnemies = new List<GameObject>();
+        spawnedWarriorEnemies = new List<GameObject>();
+        ListOfEnemies = new List<Enemy>();
+
+        crusherPatrolPoints1 = new List<Vector3>();
+        crusherPatrolPoints2 = new List<Vector3>();
+        warriorPatrolPoints1 = new List<Vector3>();
+        warriorPatrolPoints2 = new List<Vector3>();
+
+        NextRoom.OnEnteringNextLevel += ClearEnemies;
+    }
+
+    private void OnDisable()
+    {
+        NextRoom.OnEnteringNextLevel -= ClearEnemies;
+    }
+
+    public void SetupPlayerTransform(Transform playerTransform)
+    {
+        this.playerTransform = playerTransform;
+    }
 
     public void SetListOfRooms(List<Room> listOfRooms, Room entryPointRoom)
     {
         this.listOfRooms = new List<Room>(listOfRooms);
-        this.listOfRooms.Remove(entryPointRoom);
 
-        //get a random percentage 60-80 percent of the rooms will have enemies in them. 
+        // Get a random percentage 60-80 percent of the rooms will have enemies in them.
         float randomPercentage = Random.Range(60f, 80f);
         int amountOfRoomsToSpawnEnemies = Mathf.RoundToInt(this.listOfRooms.Count * (randomPercentage / 100f));
 
-        //Next let's do some shuffling to get a new list - the amount of rooms 
+        // Shuffle the list and get a new list with the amount of rooms to spawn enemies.
         this.listOfRooms = ShuffleList(this.listOfRooms);
         this.listOfRooms = this.listOfRooms.GetRange(0, amountOfRoomsToSpawnEnemies);
     }
 
     public void SpawnEnemies(int level)
     {
-        int totalXP = Mathf.RoundToInt(1000 * Mathf.Pow(1.2f, level)); //1.2 is the modifier
-        Debug.Log("Total XP for level " + level + ": " + totalXP);
+        int totalXP = Mathf.RoundToInt(1000 * Mathf.Pow(1.2f, level)); // 1.2 is the modifier
 
+        // Ensure each room gets at least one enemy
+        foreach (var room in listOfRooms)
+        {
+            totalXP -= SpawnEnemyInRoom(room, totalXP);
+        }
+
+        // Spread the remaining enemies randomly
         while (totalXP > 0 && listOfRooms.Count > 0)
         {
             totalXP -= SpawnRandomEnemy(totalXP);
         }
     }
-    private int SpawnRandomEnemy(int remainingXP)
+
+    private int SpawnEnemyInRoom(Room room, int remainingXP)
     {
-        EnemyData enemyData = enemyDataList[Random.Range(0, enemyDataList.Count)];
-        Room randomRoom = listOfRooms[Random.Range(0, listOfRooms.Count)];
-        Vector2 spawnPosition = randomRoom.CenterPoint; // for now it's the center point of the room. Not for long tho
+        ScriptableObject enemyData = enemyDataList[Random.Range(0, enemyDataList.Count)];
+        Vector2Int spawnPosition2D = GetRandomSpawnPosition(room);
+        Vector3Int spawnPosition = new Vector3Int(spawnPosition2D.x, 1, spawnPosition2D.y);
 
-        GameObject enemyInstance = Instantiate(enemyData.prefab, spawnPosition, Quaternion.identity);
+        Enemy enemyInstance;
+        float enemyXP;
 
-        // use the xp from the enemy data's script.
-        float enemyXP = enemyData.enemyScript.xp;
-        Debug.Log("Spawned a " + enemyData.enemyScript.GetType().Name + " with XP: " + enemyXP);
+        if (enemyData is EnemyCrusherSkeletonData crusherData)
+        {
+            enemyInstance = Instantiate(crusherData.prefab, spawnPosition, Quaternion.identity).GetComponent<Enemy>();
+            enemyXP = crusherData.enemyScript.xp;
+            spawnedCrusherEnemies.Add(enemyInstance.gameObject);
+        }
+        else if (enemyData is EnemyWarriorSkeletonData warriorData)
+        {
+            enemyInstance = Instantiate(warriorData.prefab, spawnPosition, Quaternion.identity).GetComponent<Enemy>();
+            enemyXP = warriorData.enemyScript.xp;
+            spawnedWarriorEnemies.Add(enemyInstance.gameObject);
+        }
+        else
+        {
+            Debug.LogError("Unknown enemy data type.");
+            return 0;
+        }
+
+        usedPositions.Add(spawnPosition2D);
+        spawnedEnemiesXP.Add(enemyXP);
+
+        ListOfEnemies.Add(enemyInstance);
+
+        // Get points and add them to the enemy, also make the enemy patrol state
+        Vector3 patrolPoint1 = GetRandomPointInRoom(room);
+        Vector3 patrolPoint2 = GetRandomPointInRoom(room);
+        EnemyPatrolState patrolState = new EnemyPatrolState(enemyInstance);
+        patrolState.SetPatrolPoints(patrolPoint1, patrolPoint2);
+        enemyInstance.TransitionToState(patrolState);
+
+        // Save patrol points
+        if (enemyData is EnemyCrusherSkeletonData)
+        {
+            crusherPatrolPoints1.Add(patrolPoint1);
+            crusherPatrolPoints2.Add(patrolPoint2);
+        }
+        else if (enemyData is EnemyWarriorSkeletonData)
+        {
+            warriorPatrolPoints1.Add(patrolPoint1);
+            warriorPatrolPoints2.Add(patrolPoint2);
+        }
 
         return Mathf.RoundToInt(enemyXP);
     }
 
+    public void InitializeEnemyReferences()
+    {
+        foreach (var enemy in ListOfEnemies)
+        {
+            enemy.InitializeEnemyReferences(playerTransform);
+        }
+    }
+
+    private int SpawnRandomEnemy(int remainingXP)
+    {
+        Room randomRoom = listOfRooms[Random.Range(0, listOfRooms.Count)];
+        return SpawnEnemyInRoom(randomRoom, remainingXP);
+    }
+
+    private Vector2Int GetRandomSpawnPosition(Room room)
+    {
+        Vector2Int spawnPosition;
+        int attempts = 0;
+        int maxAttempt = 1000;
+        do
+        {
+            int x = Random.Range(room.bottomLeftRoomCorner.x + 2, room.topRightRoomCorner.x - 2);
+            int y = Random.Range(room.bottomLeftRoomCorner.y + 2, room.topRightRoomCorner.y - 2);
+            spawnPosition = new Vector2Int(x, y);
+            attempts++;
+        } while (usedPositions.Contains(spawnPosition) && attempts < maxAttempt);
+
+        if (attempts >= maxAttempt)//just to be safe yknow? 
+        {
+            Debug.LogError("No available positions to spawn enemy in room.");
+            return Vector2Int.RoundToInt(room.CenterPoint);//if we made too many enemies, they will spawn in the cetner. Just in case
+        }
+
+        return spawnPosition;
+    }
+
+    private Vector3 GetRandomPointInRoom(Room room)
+    {
+        int x = Random.Range(room.bottomLeftRoomCorner.x + 1, room.topRightRoomCorner.x - 1);
+        int y = Random.Range(room.bottomLeftRoomCorner.y + 1, room.topRightRoomCorner.y - 1);
+        return new Vector3(x, 1, y);
+    }
 
     private List<Room> ShuffleList(List<Room> list)
     {
@@ -57,6 +192,88 @@ public class RandomEnemySpawner : MonoBehaviour
             list[randomIndex] = temp;
         }
         return list;
+    }
+
+    public void SaveEnemyPositions()
+    {
+        GameData gameData = DataPersistenceManager.instance.GameData;
+        gameData.crusherSkeletonPositions.Clear();
+        gameData.warriorSkeletonPositions.Clear();
+        gameData.crusherPatrolPoints1.Clear();
+        gameData.crusherPatrolPoints2.Clear();
+        gameData.warriorPatrolPoints1.Clear();
+        gameData.warriorPatrolPoints2.Clear();
+
+        foreach (GameObject enemy in spawnedCrusherEnemies)
+        {
+            gameData.crusherSkeletonPositions.Add(enemy.transform.position);
+        }
+
+        foreach (GameObject enemy in spawnedWarriorEnemies)
+        {
+            gameData.warriorSkeletonPositions.Add(enemy.transform.position);
+        }
+
+        gameData.crusherPatrolPoints1.AddRange(crusherPatrolPoints1);
+        gameData.crusherPatrolPoints2.AddRange(crusherPatrolPoints2);
+        gameData.warriorPatrolPoints1.AddRange(warriorPatrolPoints1);
+        gameData.warriorPatrolPoints2.AddRange(warriorPatrolPoints2);
+
+        DataPersistenceManager.instance.SaveGame();
+    }
+
+    public void LoadEnemyPositions()
+    {
+        GameData gameData = DataPersistenceManager.instance.GameData;
+
+        for (int i = 0; i < gameData.crusherSkeletonPositions.Count; i++)
+        {
+            GameObject enemy = Instantiate(crusherSkeleton.prefab, gameData.crusherSkeletonPositions[i], Quaternion.identity);
+            spawnedCrusherEnemies.Add(enemy);
+            ListOfEnemies.Add(enemy.GetComponent<Enemy>());
+
+            // Set patrol points
+            Vector3 patrolPoint1 = gameData.crusherPatrolPoints1[i];
+            Vector3 patrolPoint2 = gameData.crusherPatrolPoints2[i];
+            EnemyPatrolState patrolState = new EnemyPatrolState(enemy.GetComponent<Enemy>());
+            patrolState.SetPatrolPoints(patrolPoint1, patrolPoint2);
+            enemy.GetComponent<Enemy>().TransitionToState(patrolState);
+        }
+
+        for (int i = 0; i < gameData.warriorSkeletonPositions.Count; i++)
+        {
+            GameObject enemy = Instantiate(warriorSkeleton.prefab, gameData.warriorSkeletonPositions[i], Quaternion.identity);
+            spawnedWarriorEnemies.Add(enemy);
+            ListOfEnemies.Add(enemy.GetComponent<Enemy>());
+
+            // Set patrol points
+            Vector3 patrolPoint1 = gameData.warriorPatrolPoints1[i];
+            Vector3 patrolPoint2 = gameData.warriorPatrolPoints2[i];
+            EnemyPatrolState patrolState = new EnemyPatrolState(enemy.GetComponent<Enemy>());
+            patrolState.SetPatrolPoints(patrolPoint1, patrolPoint2);
+            enemy.GetComponent<Enemy>().TransitionToState(patrolState);
+        }
+    }
+
+    public void ClearEnemies()
+    {
+        foreach (var enemy in ListOfEnemies)
+        {
+            if (enemy != null)
+            {
+                Destroy(enemy.gameObject);
+            }
+        }
+
+        ListOfEnemies.Clear();
+        spawnedCrusherEnemies.Clear();
+        spawnedWarriorEnemies.Clear();
+        usedPositions.Clear();
+        spawnedEnemiesXP.Clear();
+        crusherPatrolPoints1.Clear();
+        crusherPatrolPoints2.Clear();
+        warriorPatrolPoints1.Clear();
+        warriorPatrolPoints2.Clear();
     }
 }
 

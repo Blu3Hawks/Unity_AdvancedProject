@@ -1,3 +1,4 @@
+using Enemies;
 using UnityEngine;
 
 namespace Managers
@@ -6,32 +7,41 @@ namespace Managers
     {
         [Header("References")]
         [SerializeField] private PlayerController player;
-        [SerializeField] private LevelManager levelManager;
+        [SerializeField] private RandomEnemySpawner enemySpawner;
         [SerializeField] private LevelUpSystem levelUpSystem;
         [SerializeField] private UiManager uiManager;
 
-        private void OnEnable()
+
+        private void OnDisable()
         {
-            foreach (var enemy in levelManager.enemies)
+            player.OnHit -= uiManager.UpdatePlayerHpBar;
+            player.OnParry -= uiManager.SetDamageMultiplierTxt;
+        }
+
+        public void SetupEvents()
+        {
+            foreach (Enemy enemy in enemySpawner.ListOfEnemies)
             {
                 enemy.OnEnemyDeath += levelUpSystem.AddXp;
                 enemy.OnEnemyDeath += uiManager.UpdateXpBar;
             }
-
-            player.OnHit += uiManager.UpdatePlayerHpBar;
-            player.OnParry += uiManager.SetDamageMultiplierTxt;
         }
 
-        private void OnDisable()
+        public void RemoveEnemiesEvents()
         {
-            foreach (var enemy in levelManager.enemies)
+            foreach (Enemy enemy in enemySpawner.ListOfEnemies)
             {
                 enemy.OnEnemyDeath -= levelUpSystem.AddXp;
                 enemy.OnEnemyDeath -= uiManager.UpdateXpBar;
             }
+        }
 
-            player.OnHit -= uiManager.UpdatePlayerHpBar;
-            player.OnParry -= uiManager.SetDamageMultiplierTxt;
+        public void SetupGameManagerEventsAndScripts(PlayerController playerController, LevelUpSystem levelUpSystem)
+        {
+            player = playerController;
+            this.levelUpSystem = levelUpSystem;
+            Debug.Log(player, uiManager);
+
         }
     }
 }
