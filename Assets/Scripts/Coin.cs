@@ -2,6 +2,8 @@ using System;
 using Managers;
 using UnityEngine;
 
+// UNUSED SCRIPT
+
 public class Coin : MonoBehaviour
 {
     public event Action<Coin> OnCollected;

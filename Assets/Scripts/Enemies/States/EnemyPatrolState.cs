@@ -56,9 +56,7 @@ namespace Enemies.States
 
         public override void ExitState()
         {
-            if (!Enemy.animator) return;
-
-            //Enemy.animator.SetBool(IsMoving, false);
+            
         }
 
         public void SetPatrolPoints(Vector3 point1, Vector3 point2)

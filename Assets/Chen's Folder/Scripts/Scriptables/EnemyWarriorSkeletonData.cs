@@ -1,10 +1,12 @@
-using UnityEngine;
-using UnityEditor;
 using Enemies;
+using UnityEngine;
 
-[CreateAssetMenu(fileName = "Enemy Skeleton Warrior Data", menuName = "Scriptable Objects/Enemy Skeleton Warrior Data", order = 3)]
-public class EnemyWarriorSkeletonData : ScriptableObject
+namespace Chen_s_Folder.Scripts.Scriptables
 {
-    public GameObject prefab;
-    public WarriorSkeletonEnemy enemyScript;
+    [CreateAssetMenu(fileName = "Enemy Skeleton Warrior Data", menuName = "Scriptable Objects/Enemy Skeleton Warrior Data", order = 3)]
+    public class EnemyWarriorSkeletonData : ScriptableObject
+    {
+        public GameObject prefab;
+        public WarriorSkeletonEnemy enemyScript;
+    }
 }

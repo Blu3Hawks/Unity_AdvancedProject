@@ -1,22 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class StartingMenu : Menu
+namespace Chen_s_Folder.Scripts.Main_Menu
 {
-    [SerializeField] private MainMenu mainMenu;
-    public void OnPlayClicked()
+    public class StartingMenu : Menu
     {
-        DeactivateMenu();
-        mainMenu.ActivateMenu();
-    }
-    public void ActivateMenu()
-    {
-        this.gameObject.SetActive(true);
-    }
+        [SerializeField] private MainMenu mainMenu;
+        public void OnPlayClicked()
+        {
+            DeactivateMenu();
+            mainMenu.ActivateMenu();
+        }
+        public void ActivateMenu()
+        {
+            this.gameObject.SetActive(true);
+        }
 
-    public void DeactivateMenu()
-    {
-        this.gameObject.SetActive(false);
+        private void DeactivateMenu()
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }

@@ -1,50 +1,53 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Room
+namespace Chen_s_Folder.Scripts.Procedural_Generation
 {
-    public Vector2Int bottomLeftRoomCorner;
-    public Vector2Int topRightRoomCorner;
-
-    public Vector2Int bottomRightRoomCorner;
-    public Vector2Int topLeftRoomCorner;
-
-    private Vector2 centerPoint;
-
-    private List<Room> listOfRoomsToConnect;
-    public List<Room> ListOfRoomsToConnect => listOfRoomsToConnect;
-    public int amountOfRoomsToConnect { get; private set; }
-
-    public int Width => (topRightRoomCorner.x - bottomLeftRoomCorner.x);
-    public int Length => (topRightRoomCorner.y - bottomLeftRoomCorner.y);
-
-    public Vector2 CenterPoint => centerPoint;
-
-    public bool CanAddMoreConnections => listOfRoomsToConnect.Count < amountOfRoomsToConnect;
-
-    public Room(Vector2Int bottomLeftCorner, Vector2Int topRightCorner, int amountOfRooms)
+    public class Room
     {
-        bottomLeftRoomCorner = bottomLeftCorner;
-        topRightRoomCorner = topRightCorner;
+        public Vector2Int BottomLeftRoomCorner;
+        public Vector2Int TopRightRoomCorner;
 
-        bottomRightRoomCorner = new Vector2Int(topRightCorner.x, bottomLeftCorner.y);
-        topLeftRoomCorner = new Vector2Int(bottomLeftCorner.x, topRightCorner.y);
+        public Vector2Int BottomRightRoomCorner;
+        public Vector2Int TopLeftRoomCorner;
 
-        amountOfRoomsToConnect = amountOfRooms;
-        listOfRoomsToConnect = new List<Room>();
+        private Vector2 _centerPoint;
 
-        centerPoint = new Vector2(bottomLeftRoomCorner.x + Width / 2f, bottomLeftRoomCorner.y + Length / 2f);
-    }
+        private List<Room> _listOfRoomsToConnect;
+        public List<Room> ListOfRoomsToConnect => _listOfRoomsToConnect;
+        public int AmountOfRoomsToConnect { get; private set; }
 
-    public bool IsConnectedToGivenRoom(Room room)
-    {
-        return room != this &&
-               !listOfRoomsToConnect.Contains(room) &&
-               listOfRoomsToConnect.Count < amountOfRoomsToConnect;
-    }
+        public int Width => (TopRightRoomCorner.x - BottomLeftRoomCorner.x);
+        public int Length => (TopRightRoomCorner.y - BottomLeftRoomCorner.y);
 
-    public void AddRoomToList(Room room)
-    {
-        listOfRoomsToConnect.Add(room);
+        public Vector2 CenterPoint => _centerPoint;
+
+        public bool CanAddMoreConnections => _listOfRoomsToConnect.Count < AmountOfRoomsToConnect;
+
+        public Room(Vector2Int bottomLeftCorner, Vector2Int topRightCorner, int amountOfRooms)
+        {
+            BottomLeftRoomCorner = bottomLeftCorner;
+            TopRightRoomCorner = topRightCorner;
+
+            BottomRightRoomCorner = new Vector2Int(topRightCorner.x, bottomLeftCorner.y);
+            TopLeftRoomCorner = new Vector2Int(bottomLeftCorner.x, topRightCorner.y);
+
+            AmountOfRoomsToConnect = amountOfRooms;
+            _listOfRoomsToConnect = new List<Room>();
+
+            _centerPoint = new Vector2(BottomLeftRoomCorner.x + Width / 2f, BottomLeftRoomCorner.y + Length / 2f);
+        }
+
+        public bool IsConnectedToGivenRoom(Room room)
+        {
+            return room != this &&
+                   !_listOfRoomsToConnect.Contains(room) &&
+                   _listOfRoomsToConnect.Count < AmountOfRoomsToConnect;
+        }
+
+        public void AddRoomToList(Room room)
+        {
+            _listOfRoomsToConnect.Add(room);
+        }
     }
 }
