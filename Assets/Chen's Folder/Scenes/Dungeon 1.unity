@@ -472,10 +472,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1188276633560882052, guid: 1b7f54704d9a9874f9a557757cd2048f, type: 3}
+    - target: {fileID: 6021740575677828798, guid: 1b7f54704d9a9874f9a557757cd2048f, type: 3}
+      propertyPath: parrySfx
+      value: 
+      objectReference: {fileID: 8300000, guid: 67dd73a8fb8b99e4d8c8d793c86c4324, type: 3}
+    - target: {fileID: 6021740575677828798, guid: 1b7f54704d9a9874f9a557757cd2048f, type: 3}
+      propertyPath: sfxSource
+      value: 
+      objectReference: {fileID: 857002242}
+    - target: {fileID: 6021740575677828798, guid: 1b7f54704d9a9874f9a557757cd2048f, type: 3}
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 897738763}
+    - target: {fileID: 6021740575677828798, guid: 1b7f54704d9a9874f9a557757cd2048f, type: 3}
+      propertyPath: musicSource
+      value: 
+      objectReference: {fileID: 857002243}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -484,6 +496,16 @@ PrefabInstance:
 --- !u!4 &857002241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 609801599366237058, guid: 1b7f54704d9a9874f9a557757cd2048f, type: 3}
+  m_PrefabInstance: {fileID: 857002240}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &857002242 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 884652776712845673, guid: 1b7f54704d9a9874f9a557757cd2048f, type: 3}
+  m_PrefabInstance: {fileID: 857002240}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &857002243 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 5695283885397892199, guid: 1b7f54704d9a9874f9a557757cd2048f, type: 3}
   m_PrefabInstance: {fileID: 857002240}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &897738762

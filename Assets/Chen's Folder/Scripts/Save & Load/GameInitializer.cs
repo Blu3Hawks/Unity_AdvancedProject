@@ -27,11 +27,17 @@ public class GameInitializer : MonoBehaviour
     public GameObject MainHero { get; private set; }
     public CharacterData ClonedHeroData { get; private set; }
     public PlayerController MainHeroController { get; private set; }
+    public GameplayAudioManager gameplayAudioManager;
 
     private void Start()
     {
         ClonedHeroData = Instantiate(mainHeroData);
         StartCoroutine(InitializeGameDelayed());
+    }
+
+    private void OnDisable()
+    {
+        MainHeroController.OnParry -= gameplayAudioManager.PlayParrySfx;
     }
 
     private IEnumerator InitializeGameDelayed()
@@ -47,6 +53,7 @@ public class GameInitializer : MonoBehaviour
         // Subscribe to events
         MainHeroController.OnHit += uiManager.UpdatePlayerHpBar;
         MainHeroController.OnParry += uiManager.SetDamageMultiplierTxt;
+        MainHeroController.OnParry += gameplayAudioManager.PlayParrySfx;
 
         // Get additional components
         var playerInput = MainHero.GetComponent<PlayerInput>();
