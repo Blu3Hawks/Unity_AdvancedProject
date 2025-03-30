@@ -508,6 +508,17 @@ AudioSource:
   m_CorrespondingSourceObject: {fileID: 5695283885397892199, guid: 1b7f54704d9a9874f9a557757cd2048f, type: 3}
   m_PrefabInstance: {fileID: 857002240}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &857002244 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6021740575677828798, guid: 1b7f54704d9a9874f9a557757cd2048f, type: 3}
+  m_PrefabInstance: {fileID: 857002240}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f677be7c8d446648714b0b51bc93e67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &897738762
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -639,6 +650,7 @@ MonoBehaviour:
   gameManager: {fileID: 897738763}
   pausedManager: {fileID: 1118582697}
   uiManager: {fileID: 1579299551}
+  gameplayAudioManager: {fileID: 857002244}
 --- !u!4 &964373033
 Transform:
   m_ObjectHideFlags: 0
