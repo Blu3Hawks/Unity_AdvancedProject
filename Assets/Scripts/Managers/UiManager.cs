@@ -1,6 +1,8 @@
+using Chen_s_Folder.Scripts.Save___Load;
 using TMPro;
 using UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Managers
@@ -95,5 +97,18 @@ namespace Managers
             this.levelUpSystem = levelUpSystem;
         }
 
+        public void OnReturnToMainMenu()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadSceneAsync("Main Menu");
+            DataPersistenceManager.Instance.DeleteProfileId(DataPersistenceManager.Instance.SelectedProfileId);
+        }
+
+        public void OnExitGame()
+        {
+            Time.timeScale = 1f;
+            Application.Quit();
+            DataPersistenceManager.Instance.DeleteProfileId(DataPersistenceManager.Instance.SelectedProfileId);
+        }
     }
 }

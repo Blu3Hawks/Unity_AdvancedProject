@@ -27,6 +27,7 @@ namespace Chen_s_Folder.Scripts.Save___Load
         private FileDataHandler _dataHandler;
 
         public GameData GameData { get { return _gameData; } }
+        public string SelectedProfileId { get { return _selectedProfileId; } }
 
         private void Awake()
         {

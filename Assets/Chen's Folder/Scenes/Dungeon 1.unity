@@ -1172,6 +1172,10 @@ PrefabInstance:
     - target: {fileID: 1359737089045517261, guid: 18518cef2a636c54faf8b9c89973e986, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 1579299551}
+    - target: {fileID: 1359737089045517261, guid: 18518cef2a636c54faf8b9c89973e986, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnReturnToMainMenu
       objectReference: {fileID: 0}
     - target: {fileID: 4744901735194239647, guid: 18518cef2a636c54faf8b9c89973e986, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1268,6 +1272,10 @@ PrefabInstance:
     - target: {fileID: 6527891131104081023, guid: 18518cef2a636c54faf8b9c89973e986, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 1579299551}
+    - target: {fileID: 6527891131104081023, guid: 18518cef2a636c54faf8b9c89973e986, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnExitGame
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
