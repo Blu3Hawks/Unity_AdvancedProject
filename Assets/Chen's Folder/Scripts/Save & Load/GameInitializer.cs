@@ -80,16 +80,18 @@ public class GameInitializer : MonoBehaviour
             DataPersistenceManager.instance.NewGame();
             enemySpawner.SpawnEnemies(levelGenerator.Level); //here we will spawn enemies if we enter to a new game.
             MainHeroController.SetEntryPointAndCamera(levelGenerator.EntryPointRoom.CenterPoint, mainCamera.transform);
+            MainHeroController._curHp = MainHeroController.MaxHealth;
         }
 
         yield return new WaitForSeconds(0.01f);//trying a bit of delay
         enemySpawner.SetupPlayerTransform(MainHero.transform);
-        enemySpawner.LoadEnemyPositions();
 
         SetupEnemiesReferences();
         //we setup the managers eventually
         yield return new WaitForSeconds(0.05f);
         SetupManagers(playerInput, levelUpSystem);
+        enemySpawner.LoadEnemyPositions();
+
     }
 
     private void SetupEnemiesReferences()
