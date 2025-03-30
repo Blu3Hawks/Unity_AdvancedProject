@@ -53,6 +53,7 @@ namespace Chen_s_Folder.Scripts.Save___Load
             MainHero = Instantiate(ClonedHeroData.characterPrefab);
             MainHeroController = MainHero.GetComponent<PlayerController>(); //yes yes, I know, get component. The only way I found I swear
             MainHeroController.SetEntryPointAndCamera(levelGenerator.EntryPointRoom.CenterPoint, mainCamera.transform);
+            MainHeroController.lockOnSystem.mainCamera = mainCamera;
 
             // Subscribe to events
             MainHeroController.OnHit += uiManager.UpdatePlayerHpBar;
@@ -62,6 +63,7 @@ namespace Chen_s_Folder.Scripts.Save___Load
             // Get additional components
             var playerInput = MainHero.GetComponent<PlayerInput>();
             var levelUpSystem = MainHero.GetComponent<LevelUpSystem>();
+            levelUpSystem.OnLevelUp += uiManager.SetLevelText;
 
             //get the references to the level generator as well
             levelGenerator.characterObject = MainHero;

@@ -10,7 +10,8 @@ namespace Chen_s_Folder.Scripts.Main_Menu
 
         protected virtual void OnEnable()
         {
-            SetFirstSelected(firstSelected);
+            if (firstSelected != null)
+                SetFirstSelected(firstSelected);
         }
 
         protected void SetFirstSelected(Button firstSelectedButton)

@@ -1,6 +1,7 @@
 using Chen_s_Folder.Scripts.Save___Load;
 using Chen_s_Folder.Scripts.Save___Load.Data;
 using Interfaces;
+using Managers;
 using PlayerStates;
 using UnityEngine;
 using UnityEngine.Events;
@@ -22,7 +23,8 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
     public AnimationClip attackAnimation;
     public AnimationClip blockAnimation;
     public Weapon weapon;
-    [SerializeField] private LevelUpSystem levelUpSystem;
+    public LevelUpSystem levelUpSystem;
+    public LockOnSystem lockOnSystem;
 
     [Header("Forces")]
     public float moveSpeed = 5f;
