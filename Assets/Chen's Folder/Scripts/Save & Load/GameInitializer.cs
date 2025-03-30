@@ -27,17 +27,11 @@ public class GameInitializer : MonoBehaviour
     public GameObject MainHero { get; private set; }
     public CharacterData ClonedHeroData { get; private set; }
     public PlayerController MainHeroController { get; private set; }
-    public GameplayAudioManager gameplayAudioManager;
 
     private void Start()
     {
         ClonedHeroData = Instantiate(mainHeroData);
         StartCoroutine(InitializeGameDelayed());
-    }
-
-    private void OnDisable()
-    {
-        MainHeroController.OnParry -= gameplayAudioManager.PlayParrySfx;
     }
 
     private IEnumerator InitializeGameDelayed()
@@ -53,7 +47,7 @@ public class GameInitializer : MonoBehaviour
         // Subscribe to events
         MainHeroController.OnHit += uiManager.UpdatePlayerHpBar;
         MainHeroController.OnParry += uiManager.SetDamageMultiplierTxt;
-        MainHeroController.OnParry += gameplayAudioManager.PlayParrySfx;
+        uiManager.AddSubscribersToPlayerDeath(MainHeroController);
 
         // Get additional components
         var playerInput = MainHero.GetComponent<PlayerInput>();
@@ -87,18 +81,16 @@ public class GameInitializer : MonoBehaviour
             DataPersistenceManager.instance.NewGame();
             enemySpawner.SpawnEnemies(levelGenerator.Level); //here we will spawn enemies if we enter to a new game.
             MainHeroController.SetEntryPointAndCamera(levelGenerator.EntryPointRoom.CenterPoint, mainCamera.transform);
-            MainHeroController._curHp = MainHeroController.MaxHealth;
         }
 
         yield return new WaitForSeconds(0.01f);//trying a bit of delay
         enemySpawner.SetupPlayerTransform(MainHero.transform);
+        enemySpawner.LoadEnemyPositions();
 
         SetupEnemiesReferences();
         //we setup the managers eventually
         yield return new WaitForSeconds(0.05f);
         SetupManagers(playerInput, levelUpSystem);
-        enemySpawner.LoadEnemyPositions();
-
     }
 
     private void SetupEnemiesReferences()
@@ -116,10 +108,18 @@ public class GameInitializer : MonoBehaviour
         uiManager.SetupPlayerScripts(levelUpSystem);
 
         gameManager.SetupEvents();
-
-        playerInput.actions["Pause"].performed += pausedManager.OnPause;
+        StartCoroutine(InitializeUiManagerEvent(playerInput));
     }
 
+    private IEnumerator InitializeUiManagerEvent(PlayerInput playerInput)
+    {
+        while(pausedManager == null)
+        { yield return new WaitForSeconds(0.01f); 
+        }
+        playerInput.actions["Pause"].performed += pausedManager.OnPause;
+
+
+    }
     private void OnApplicationQuit()
     {
         // Save player state

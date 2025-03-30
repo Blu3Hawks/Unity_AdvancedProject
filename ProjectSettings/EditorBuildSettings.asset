@@ -11,9 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Chen's Folder/Scenes/Dungeon 1.unity
     guid: 40687f3f07514bb45bb01d24687c5e1a
-  - enabled: 1
-    path: Assets/Chen's Folder/Scenes/Second Level.unity
-    guid: f92b79a2094fd0446881f66e920921a5
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

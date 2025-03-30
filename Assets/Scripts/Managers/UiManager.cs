@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Managers
@@ -22,6 +23,7 @@ namespace Managers
         
         [Header("Pause Menu")]
         [SerializeField] private GameObject pauseMenu;
+        [SerializeField] private GameObject deathMenu;
         
         [Header("Character HUD")]
         [SerializeField] private HealthBar healthBar;
@@ -93,6 +95,31 @@ namespace Managers
         public void SetupPlayerScripts(LevelUpSystem levelUpSystem)
         {
             this.levelUpSystem = levelUpSystem;
+        }
+
+        public void AddSubscribersToPlayerDeath(PlayerController player)
+        {
+            player.OnPlayerDeath += DeathMethods;
+        }
+
+        private void DeathMethods()
+        {
+            Time.timeScale = 0f;
+            deathMenu.SetActive(true);
+        }
+
+        public void OnReturnToMainMenu()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadSceneAsync("Main Menu");
+            DataPersistenceManager.instance.DeleteProfileId(DataPersistenceManager.instance.SelectedProfileId);
+        }
+
+        public void OnExitGame()
+        {
+            Time.timeScale = 1f;
+            Application.Quit();
+            DataPersistenceManager.instance.DeleteProfileId(DataPersistenceManager.instance.SelectedProfileId);
         }
 
     }

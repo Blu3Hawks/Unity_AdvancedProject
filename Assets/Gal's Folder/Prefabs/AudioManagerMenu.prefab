@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 609801599366237058}
-  - component: {fileID: 6021740575677828798}
+  - component: {fileID: 3491301576739625411}
   m_Layer: 0
   m_Name: AudioManagerMenu
   m_TagString: Untagged
@@ -34,7 +34,7 @@ Transform:
   - {fileID: 4201113562651404954}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6021740575677828798
+--- !u!114 &3491301576739625411
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -50,7 +50,7 @@ MonoBehaviour:
   musicSource: {fileID: 5695283885397892199}
   sfxSource: {fileID: 884652776712845673}
   soundTrack1: {fileID: 0}
-  parrySfx: {fileID: 8300000, guid: 67dd73a8fb8b99e4d8c8d793c86c4324, type: 3}
+  parrySfx: {fileID: 0}
 --- !u!1 &6132805365656810566
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,8 @@ public class Menu : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        SetFirstSelected(firstSelected);
+        if (firstSelected != null)
+            SetFirstSelected(firstSelected);
     }
 
     public void SetFirstSelected(Button firstSelectedButton)
