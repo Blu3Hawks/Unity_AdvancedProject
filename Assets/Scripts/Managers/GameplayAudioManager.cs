@@ -15,6 +15,15 @@ namespace Managers
         [SerializeField] private AudioClip soundTrack1;
         [SerializeField] private AudioClip parrySfx;
 
+        private void Start()
+        {
+            musicSource.clip = soundTrack1;
+
+            musicSource.loop = true;
+            
+            musicSource.Play();
+        }
+
         public void PlayParrySfx(float damageMultiplier)
         {
             sfxSource.PlayOneShot(parrySfx);

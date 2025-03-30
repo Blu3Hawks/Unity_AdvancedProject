@@ -1,41 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
 using TMPro;
-public class ConfirmationMenu : Menu
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
+
+namespace Chen_s_Folder.Scripts.Main_Menu
 {
-    [SerializeField] private MainMenu mainMenu;
-    [Header("Components")]
-    [SerializeField] private TextMeshProUGUI displayText;
-    [SerializeField] private Button confirmButton;
-    [SerializeField] private Button cancelButton;
-
-    public void ActivateMenu(string displayText, UnityAction confirmAction, UnityAction cancelAction)
+    public class ConfirmationMenu : Menu
     {
-        this.gameObject.SetActive(true);
-        this.displayText.text = displayText;
-        //removing any existing listeners added by code - just to make sure we don't make extra actions
-        confirmButton.onClick.RemoveAllListeners();
-        cancelButton.onClick.RemoveAllListeners();
+        [SerializeField] private MainMenu mainMenu;
+        [Header("Components")]
+        [SerializeField] private TextMeshProUGUI displayText;
+        [SerializeField] private Button confirmButton;
+        [SerializeField] private Button cancelButton;
 
-        confirmButton.onClick.AddListener(() =>
+        public void ActivateMenu(string displayText, UnityAction confirmAction, UnityAction cancelAction)
         {
-            DeactivateMenu();
-            mainMenu.DisableButtonsAccordingToData();
-            confirmAction();
-        });
-        cancelButton.onClick.AddListener(() =>
-        {
-            DeactivateMenu();
-            mainMenu.DisableButtonsAccordingToData();
-            cancelAction();
-        });
-    }
+            this.gameObject.SetActive(true);
+            this.displayText.text = displayText;
+            //removing any existing listeners added by code - just to make sure we don't make extra actions
+            confirmButton.onClick.RemoveAllListeners();
+            cancelButton.onClick.RemoveAllListeners();
 
-    private void DeactivateMenu()
-    {
-        this.gameObject.SetActive(false);
+            confirmButton.onClick.AddListener(() =>
+            {
+                DeactivateMenu();
+                mainMenu.DisableButtonsAccordingToData();
+                confirmAction();
+            });
+            cancelButton.onClick.AddListener(() =>
+            {
+                DeactivateMenu();
+                mainMenu.DisableButtonsAccordingToData();
+                cancelAction();
+            });
+        }
+
+        private void DeactivateMenu()
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }

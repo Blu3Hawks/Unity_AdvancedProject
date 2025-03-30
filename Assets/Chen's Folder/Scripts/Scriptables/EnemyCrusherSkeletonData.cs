@@ -1,10 +1,12 @@
-using UnityEngine;
-using UnityEditor;
 using Enemies;
+using UnityEngine;
 
-[CreateAssetMenu(fileName = "Enemy Crusher Skeleton Data", menuName = "Scriptable Objects/Enemy Crusher Skeleton Data", order = 2)]
-public class EnemyCrusherSkeletonData : ScriptableObject
+namespace Chen_s_Folder.Scripts.Scriptables
 {
-    public GameObject prefab;
-    public CrusherSkeletonEnemy enemyScript;
+    [CreateAssetMenu(fileName = "Enemy Crusher Skeleton Data", menuName = "Scriptable Objects/Enemy Crusher Skeleton Data", order = 2)]
+    public class EnemyCrusherSkeletonData : ScriptableObject
+    {
+        public GameObject prefab;
+        public CrusherSkeletonEnemy enemyScript;
+    }
 }

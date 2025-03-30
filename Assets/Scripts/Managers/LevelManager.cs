@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Enemies;
+
+// UNUSED SCRIPT
 
 namespace Managers
 {
     public class LevelManager : MonoBehaviour
     {
-        private int currentLevel;
-        public int CurrentLevel { get { return currentLevel; } }
+        private int _currentLevel;
+        public int CurrentLevel { get { return _currentLevel; } }
 
         [SerializeField] public List<Coin> coins;
-        //public List<Enemy> listOfEnemies;
 
         public void RemoveCoin(Coin coin)
         {

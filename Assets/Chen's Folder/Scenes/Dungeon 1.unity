@@ -488,6 +488,10 @@ PrefabInstance:
       propertyPath: musicSource
       value: 
       objectReference: {fileID: 857002243}
+    - target: {fileID: 6021740575677828798, guid: 1b7f54704d9a9874f9a557757cd2048f, type: 3}
+      propertyPath: soundTrack1
+      value: 
+      objectReference: {fileID: 8300000, guid: 6c325016664054dfa8050c6954897484, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

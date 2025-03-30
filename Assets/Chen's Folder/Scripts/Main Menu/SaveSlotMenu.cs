@@ -1,140 +1,144 @@
-using System.Collections;
 using System.Collections.Generic;
+using Chen_s_Folder.Scripts.Save___Load;
+using Chen_s_Folder.Scripts.Save___Load.Data;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SaveSlotsMenu : Menu
+namespace Chen_s_Folder.Scripts.Main_Menu
 {
-    [Header("Menu Navigation")]
-    [SerializeField] private StartingMenu startingMenu;
-
-    private SaveSlot[] saveSlots;
-
-    [SerializeField] private Button backButton;
-
-    [Header("Confirmation Menu")]
-    [SerializeField] private ConfirmationMenu confirmationMenu;
-    private bool isLoadingGame = false;
-
-    private void Awake()
+    public class SaveSlotsMenu : Menu
     {
-        saveSlots = this.GetComponentsInChildren<SaveSlot>();
-    }
+        [Header("Menu Navigation")]
+        [SerializeField] private StartingMenu startingMenu;
 
-    public void OnSaveSlotClicked(SaveSlot saveSlot)
-    {
-        DisableMenuButtons();
-        if (isLoadingGame)
+        private SaveSlot[] _saveSlots;
+
+        [SerializeField] private Button backButton;
+
+        [Header("Confirmation Menu")]
+        [SerializeField] private ConfirmationMenu confirmationMenu;
+        private bool _isLoadingGame;
+
+        private void Awake()
         {
-            DataPersistenceManager.instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
-            SaveGameAndLoadScene();
+            _saveSlots = this.GetComponentsInChildren<SaveSlot>();
         }
-        else if (saveSlot.hasData)
+
+        public void OnSaveSlotClicked(SaveSlot saveSlot)
         {
-            confirmationMenu.ActivateMenu(
-                "Starting a new game with this save slot will override the existing saved data. Are you sure?",
-                //in case we pressed 'yes'
-                () =>
-                {
+            DisableMenuButtons();
+            if (_isLoadingGame)
+            {
+                DataPersistenceManager.Instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
+                SaveGameAndLoadScene();
+            }
+            else if (saveSlot.HasData)
+            {
+                confirmationMenu.ActivateMenu(
+                    "Starting a new game with this save slot will override the existing saved data. Are you sure?",
+                    //in case we pressed 'yes'
+                    () =>
+                    {
 
-                    DataPersistenceManager.instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
-                    DataPersistenceManager.instance.NewGame();
-                    SaveGameAndLoadScene();
-                },
-                //in case we pressed 'cancel'
-                () =>
-                {
+                        DataPersistenceManager.Instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
+                        DataPersistenceManager.Instance.NewGame();
+                        SaveGameAndLoadScene();
+                    },
+                    //in case we pressed 'cancel'
+                    () =>
+                    {
 
-                    //TODO - come back to this
-                    this.ActivateMenu(isLoadingGame);
-                }
+                        //TODO - come back to this
+                        this.ActivateMenu(_isLoadingGame);
+                    }
                 );
 
-        }
-        else
-        {
-            DataPersistenceManager.instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
-            DataPersistenceManager.instance.NewGame();
-            SaveGameAndLoadScene();
-        }
-
-    }
-
-    private void SaveGameAndLoadScene()
-    {
-        DataPersistenceManager.instance.SaveGame();
-        SceneManager.LoadSceneAsync("Dungeon 1");
-    }
-
-    private void DisableMenuButtons()
-    {
-        foreach (SaveSlot saveSlot in saveSlots)
-        {
-            saveSlot.SetInteractable(false);
-        }
-        backButton.interactable = false;
-    }
-    public void OnBackClicked()
-    {
-        startingMenu.ActivateMenu();
-        this.DeactivateMenu();
-
-    }
-
-    public void ActivateMenu(bool isLoadingGame)
-    {
-        this.gameObject.SetActive(true);
-
-        backButton.interactable = true;
-
-        this.isLoadingGame = isLoadingGame;
-
-        Dictionary<string, GameData> profilesGameData = DataPersistenceManager.instance.GetAllProfilesData();
-
-        GameObject firstSelected = backButton.gameObject;
-        foreach (SaveSlot saveSlot in saveSlots)
-        {
-            GameData profileData = null;
-            profilesGameData.TryGetValue(saveSlot.GetProfileId(), out profileData);
-            saveSlot.SetData(profileData);
-            if (profileData == null && isLoadingGame)
-            {
-                saveSlot.SetInteractable(false);
             }
             else
             {
-                saveSlot.SetInteractable(true);
-                if (firstSelected.Equals(backButton.gameObject))
+                DataPersistenceManager.Instance.ChangeSelectedProfileId(saveSlot.GetProfileId());
+                DataPersistenceManager.Instance.NewGame();
+                SaveGameAndLoadScene();
+            }
+
+        }
+
+        private void SaveGameAndLoadScene()
+        {
+            DataPersistenceManager.Instance.SaveGame();
+            SceneManager.LoadSceneAsync("Dungeon 1");
+        }
+
+        private void DisableMenuButtons()
+        {
+            foreach (SaveSlot saveSlot in _saveSlots)
+            {
+                saveSlot.SetInteractable(false);
+            }
+            backButton.interactable = false;
+        }
+        public void OnBackClicked()
+        {
+            startingMenu.ActivateMenu();
+            this.DeactivateMenu();
+
+        }
+
+        public void ActivateMenu(bool isLoadingGame)
+        {
+            this.gameObject.SetActive(true);
+
+            backButton.interactable = true;
+
+            this._isLoadingGame = isLoadingGame;
+
+            Dictionary<string, GameData> profilesGameData = DataPersistenceManager.Instance.GetAllProfilesData();
+
+            GameObject firstSelected = backButton.gameObject;
+            foreach (SaveSlot saveSlot in _saveSlots)
+            {
+                GameData profileData = null;
+                profilesGameData.TryGetValue(saveSlot.GetProfileId(), out profileData);
+                saveSlot.SetData(profileData);
+                if (profileData == null && isLoadingGame)
                 {
-                    firstSelected = saveSlot.gameObject;
+                    saveSlot.SetInteractable(false);
+                }
+                else
+                {
+                    saveSlot.SetInteractable(true);
+                    if (firstSelected.Equals(backButton.gameObject))
+                    {
+                        firstSelected = saveSlot.gameObject;
+                    }
                 }
             }
+            Button firstSelectedButton = firstSelected.GetComponent<Button>();
+            this.SetFirstSelected(firstSelectedButton);
         }
-        Button firstSelectedButton = firstSelected.GetComponent<Button>();
-        this.SetFirstSelected(firstSelectedButton);
-    }
 
-    public void OnClearClicked(SaveSlot saveSlot)
-    {
-        DisableMenuButtons();
+        public void OnClearClicked(SaveSlot saveSlot)
+        {
+            DisableMenuButtons();
 
-        confirmationMenu.ActivateMenu(
-            "Are you sure you want to delete this saved file?",
-            () =>
-            {
-                DataPersistenceManager.instance.DeleteProfileId(saveSlot.GetProfileId());
-                ActivateMenu(isLoadingGame);
-            },
-            () =>
-            {
-                ActivateMenu(isLoadingGame);
-            }
+            confirmationMenu.ActivateMenu(
+                "Are you sure you want to delete this saved file?",
+                () =>
+                {
+                    DataPersistenceManager.Instance.DeleteProfileId(saveSlot.GetProfileId());
+                    ActivateMenu(_isLoadingGame);
+                },
+                () =>
+                {
+                    ActivateMenu(_isLoadingGame);
+                }
             );
-    }
+        }
 
-    public void DeactivateMenu()
-    {
-        this.gameObject.SetActive(false);
+        private void DeactivateMenu()
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }

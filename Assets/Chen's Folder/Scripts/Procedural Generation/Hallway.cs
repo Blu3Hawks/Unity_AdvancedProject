@@ -1,22 +1,24 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Hallway
+namespace Chen_s_Folder.Scripts.Procedural_Generation
 {
-    public Vector2Int bottomLeftHallwayCorner { get; private set; }
-    public Vector2Int topRightHallwayCorner { get; private set; }
-    public Vector2Int bottomRightHallwayCorner { get; private set; }
-    public Vector2Int topLeftHallwayCorner { get; private set; }
-    public Vector2 CenterPoint { get; private set; }
-    public int Width => topRightHallwayCorner.x - bottomLeftHallwayCorner.x;
-    public int Length => topRightHallwayCorner.y - bottomLeftHallwayCorner.y;
-
-    public Hallway(Vector2Int bottomLeftCorner, Vector2Int topRightCorner)
+    public class Hallway
     {
-        bottomLeftHallwayCorner = bottomLeftCorner;
-        topRightHallwayCorner = topRightCorner;
-        bottomRightHallwayCorner = new Vector2Int(topRightCorner.x, bottomLeftCorner.y);
-        topLeftHallwayCorner = new Vector2Int(bottomLeftCorner.x, topRightCorner.y);
-        CenterPoint = (bottomLeftCorner + topRightCorner) / 2;
+        public Vector2Int BottomLeftHallwayCorner { get; private set; }
+        public Vector2Int TopRightHallwayCorner { get; private set; }
+        public Vector2Int BottomRightHallwayCorner { get; private set; }
+        public Vector2Int TopLeftHallwayCorner { get; private set; }
+        public Vector2 CenterPoint { get; private set; }
+        public int Width => TopRightHallwayCorner.x - BottomLeftHallwayCorner.x;
+        public int Length => TopRightHallwayCorner.y - BottomLeftHallwayCorner.y;
+
+        public Hallway(Vector2Int bottomLeftCorner, Vector2Int topRightCorner)
+        {
+            BottomLeftHallwayCorner = bottomLeftCorner;
+            TopRightHallwayCorner = topRightCorner;
+            BottomRightHallwayCorner = new Vector2Int(topRightCorner.x, bottomLeftCorner.y);
+            TopLeftHallwayCorner = new Vector2Int(bottomLeftCorner.x, topRightCorner.y);
+            CenterPoint = (bottomLeftCorner + topRightCorner) / 2;
+        }
     }
 }
