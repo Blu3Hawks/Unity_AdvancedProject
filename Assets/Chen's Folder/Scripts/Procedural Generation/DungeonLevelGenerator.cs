@@ -83,9 +83,9 @@ public class DungeonLevelGenerator : MonoBehaviour
     private void Start()
     {
         gameData = DataPersistenceManager.Instance.GetSavedGameData();
-        if (gameData != null)
+        if (gameData != null && DataPersistenceManager.Instance.GameData.currentDungeonSeed != 0 && DataPersistenceManager.Instance.GameData.currentDungeonSeed != 19)
         {
-            seed = gameData.currentDungeonSeed;
+            seed = DataPersistenceManager.Instance.GameData.currentDungeonSeed;
             useRandomSeed = gameData.useRandomSeed;
             level = gameData.dungeonLevel;
             Debug.Log("Loaded seed: " + gameData.currentDungeonSeed);
@@ -97,6 +97,8 @@ public class DungeonLevelGenerator : MonoBehaviour
             useRandomSeed = true;
             level = 0;
         }
+        Debug.Log(seed);
+
         GenerateLevelWithSeed();
 
         NextRoom.OnEnteringNextLevel += HandleEnteringNextLevel;
@@ -543,13 +545,16 @@ public class DungeonLevelGenerator : MonoBehaviour
 
     public void GenerateLevelWithSeed()
     {
-        if (useRandomSeed)
+        LoadValues();
+
+        if (useRandomSeed || seed == 0)
         {
-            seed = 0; // Reset seed to ensure a new random seed is generated
+            seed = random.Range(int.MinValue, int.MaxValue);
+            DataPersistenceManager.Instance.GameData.currentDungeonSeed = seed;
         }
 
+        random.InitState(seed);
         GenerateLevel();
-        LoadValues();
 
     }
 
@@ -577,6 +582,7 @@ public class DungeonLevelGenerator : MonoBehaviour
 
         DataPersistenceManager.Instance.SaveGame();
         DataPersistenceManager.Instance.GameData.currentDungeonSeed = seed;
+        Debug.Log(DataPersistenceManager.Instance.GameData.currentDungeonSeed + ", " + seed);
         DataPersistenceManager.Instance.GameData.useRandomSeed = false;
         DataPersistenceManager.Instance.GameData.dungeonLevel = level;
         DataPersistenceManager.Instance.GameData.PlayerPosition = characterObject.transform.position;
@@ -584,17 +590,17 @@ public class DungeonLevelGenerator : MonoBehaviour
 
     private void LoadValues()
     {
-        DataPersistenceManager.Instance.GameData.currentDungeonSeed = seed;
-        DataPersistenceManager.Instance.GameData.useRandomSeed = useRandomSeed;
-        DataPersistenceManager.Instance.GameData.dungeonLevel = level;
-
-        // Save player state
-       //// DataPersistenceManager.Instance.GameData.playerCurrentHealth = characterController._curHp;
-        //DataPersistenceManager.Instance.GameData.playerCurrentXp = characterController.LevelUpSystem.CurXp;
-        //DataPersistenceManager.Instance.GameData.playerLevel = characterController.LevelUpSystem.CurrentLevel;
-
-        DataPersistenceManager.Instance.SaveGame();
-        DataPersistenceManager.Instance.GameData.currentDungeonSeed = seed;
-        DataPersistenceManager.Instance.GameData.useRandomSeed = false;
+        if (DataPersistenceManager.Instance.GameData != null)
+        {
+            seed = DataPersistenceManager.Instance.GameData.currentDungeonSeed;
+            useRandomSeed = DataPersistenceManager.Instance.GameData.useRandomSeed;
+            level = DataPersistenceManager.Instance.GameData.dungeonLevel;
+        }
+        else
+        {
+            seed = 0;
+            useRandomSeed = true;
+            level = 0;
+        }
     }
 }

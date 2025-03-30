@@ -35,6 +35,11 @@ namespace Managers
         [SerializeField] private TextMeshProUGUI curXpTxt;
         [SerializeField] private TextMeshProUGUI xpToNextLevelTxt;
 
+        private void OnEnable()
+        {
+            pauseManager.OnPauseEnter += OpenPauseMenu;
+            pauseManager.OnPauseClose += ClosePauseMenu;
+        }
 
         private void OnDisable()
         {
