@@ -21,6 +21,7 @@ namespace Managers
         
         [Header("Pause Menu")]
         [SerializeField] private GameObject pauseMenu;
+        [SerializeField] private GameObject deathMenu;
         
         [Header("Character HUD")]
         [SerializeField] private HealthBar healthBar;
