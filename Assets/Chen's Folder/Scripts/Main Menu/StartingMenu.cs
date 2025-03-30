@@ -19,4 +19,9 @@ public class StartingMenu : Menu
     {
         this.gameObject.SetActive(false);
     }
+
+    public void OnExitGame()
+    {
+        Application.Quit();
+    }
 }
