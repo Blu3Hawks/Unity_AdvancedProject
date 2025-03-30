@@ -224,34 +224,69 @@ public class RandomEnemySpawner : MonoBehaviour
 
     public void LoadEnemyPositions()
     {
+        var data = DataPersistenceManager.instance.GameData;
 
-        for (int i = 0; i < DataPersistenceManager.instance.GameData.crusherSkeletonPositions.Count; i++)
+        // Safety checks for null or empty
+        bool hasCrushers = data.crusherSkeletonPositions != null && data.crusherSkeletonPositions.Count > 0;
+        bool hasWarriors = data.warriorSkeletonPositions != null && data.warriorSkeletonPositions.Count > 0;
+
+        bool hasCrusherPatrols = data.crusherPatrolPoints1 != null && data.crusherPatrolPoints2 != null &&
+                                 data.crusherPatrolPoints1.Count == data.crusherSkeletonPositions.Count &&
+                                 data.crusherPatrolPoints2.Count == data.crusherSkeletonPositions.Count;
+
+        bool hasWarriorPatrols = data.warriorPatrolPoints1 != null && data.warriorPatrolPoints2 != null &&
+                                 data.warriorPatrolPoints1.Count == data.warriorSkeletonPositions.Count &&
+                                 data.warriorPatrolPoints2.Count == data.warriorSkeletonPositions.Count;
+
+        if (!hasCrushers) data.crusherSkeletonPositions = new List<Vector3>();
+        if (!hasWarriors) data.warriorSkeletonPositions = new List<Vector3>();
+        if (!hasCrusherPatrols)
         {
-            GameObject enemy = Instantiate(crusherSkeleton.prefab, DataPersistenceManager.instance.GameData.crusherSkeletonPositions[i], Quaternion.identity);
+            data.crusherPatrolPoints1 = new List<Vector3>();
+            data.crusherPatrolPoints2 = new List<Vector3>();
+        }
+        if (!hasWarriorPatrols)
+        {
+            data.warriorPatrolPoints1 = new List<Vector3>();
+            data.warriorPatrolPoints2 = new List<Vector3>();
+        }
+
+        for (int i = 0; i < data.crusherSkeletonPositions.Count; i++)
+        {
+            GameObject enemy = Instantiate(crusherSkeleton.prefab, data.crusherSkeletonPositions[i], Quaternion.identity);
             spawnedCrusherEnemies.Add(enemy);
-            ListOfEnemies.Add(enemy.GetComponent<Enemy>());
+            Enemy enemyScript = enemy.GetComponent<Enemy>();
+            ListOfEnemies.Add(enemyScript);
 
-            // Set patrol points
-            Vector3 patrolPoint1 = DataPersistenceManager.instance.GameData.crusherPatrolPoints1[i];
-            Vector3 patrolPoint2 = DataPersistenceManager.instance.GameData.crusherPatrolPoints2[i];
-            EnemyPatrolState patrolState = new EnemyPatrolState(enemy.GetComponent<Enemy>());
-            patrolState.SetPatrolPoints(patrolPoint1, patrolPoint2);
-            enemy.GetComponent<Enemy>().TransitionToState(patrolState);
+            if (hasCrusherPatrols)
+            {
+                Vector3 patrolPoint1 = data.crusherPatrolPoints1[i];
+                Vector3 patrolPoint2 = data.crusherPatrolPoints2[i];
+                var patrolState = new EnemyPatrolState(enemyScript);
+                patrolState.SetPatrolPoints(patrolPoint1, patrolPoint2);
+                enemyScript.TransitionToState(patrolState);
+            }
         }
 
-        for (int i = 0; i < DataPersistenceManager.instance.GameData.warriorSkeletonPositions.Count; i++)
+        for (int i = 0; i < data.warriorSkeletonPositions.Count; i++)
         {
-            GameObject enemy = Instantiate(warriorSkeleton.prefab, DataPersistenceManager.instance.GameData.warriorSkeletonPositions[i], Quaternion.identity);
+            GameObject enemy = Instantiate(warriorSkeleton.prefab, data.warriorSkeletonPositions[i], Quaternion.identity);
             spawnedWarriorEnemies.Add(enemy);
-            ListOfEnemies.Add(enemy.GetComponent<Enemy>());
+            Enemy enemyScript = enemy.GetComponent<Enemy>();
+            ListOfEnemies.Add(enemyScript);
 
-            // Set patrol points
-            Vector3 patrolPoint1 = DataPersistenceManager.instance.GameData.warriorPatrolPoints1[i];
-            Vector3 patrolPoint2 = DataPersistenceManager.instance.GameData.warriorPatrolPoints2[i];
-            EnemyPatrolState patrolState = new EnemyPatrolState(enemy.GetComponent<Enemy>());
-            patrolState.SetPatrolPoints(patrolPoint1, patrolPoint2);
-            enemy.GetComponent<Enemy>().TransitionToState(patrolState);
+            if (hasWarriorPatrols)
+            {
+                Vector3 patrolPoint1 = data.warriorPatrolPoints1[i];
+                Vector3 patrolPoint2 = data.warriorPatrolPoints2[i];
+                var patrolState = new EnemyPatrolState(enemyScript);
+                patrolState.SetPatrolPoints(patrolPoint1, patrolPoint2);
+                enemyScript.TransitionToState(patrolState);
+            }
         }
+
+        InitializeEnemyReferences();
+
     }
 
     public void ClearEnemies()
