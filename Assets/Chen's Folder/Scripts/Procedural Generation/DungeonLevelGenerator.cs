@@ -590,9 +590,8 @@ public class DungeonLevelGenerator : MonoBehaviour
 
         // Load player state
 
-        characterController._curHp = DataPersistenceManager.instance.GameData.playerCurrentHealth;
-        characterController.LevelUpSystem.CurXp = DataPersistenceManager.instance.GameData.playerCurrentXp;
-        characterController.LevelUpSystem.CurrentLevel = DataPersistenceManager.instance.GameData.playerLevel;
-        characterController.transform.position = DataPersistenceManager.instance.GameData.PlayerPosition;
+        //characterController.LevelUpSystem.CurXp = DataPersistenceManager.instance.GameData.playerCurrentXp;
+        //characterController.LevelUpSystem.CurrentLevel = DataPersistenceManager.instance.GameData.playerLevel;
+        //characterController.transform.position = DataPersistenceManager.instance.GameData.PlayerPosition;
     }
 }

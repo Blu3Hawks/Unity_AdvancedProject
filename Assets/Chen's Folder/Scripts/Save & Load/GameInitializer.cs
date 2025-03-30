@@ -43,11 +43,8 @@ public class GameInitializer : MonoBehaviour
         MainHero = Instantiate(ClonedHeroData.characterPrefab);
         MainHeroController = MainHero.GetComponent<PlayerController>(); //yes yes, I know, get component. The only way I found I swear
         MainHeroController.SetEntryPointAndCamera(levelGenerator.EntryPointRoom.CenterPoint, mainCamera.transform);
+        
 
-        // Subscribe to events
-        MainHeroController.OnHit += uiManager.UpdatePlayerHpBar;
-        MainHeroController.OnParry += uiManager.SetDamageMultiplierTxt;
-        uiManager.AddSubscribersToPlayerDeath(MainHeroController);
 
         // Get additional components
         var playerInput = MainHero.GetComponent<PlayerInput>();
@@ -81,7 +78,9 @@ public class GameInitializer : MonoBehaviour
             DataPersistenceManager.instance.NewGame();
             enemySpawner.SpawnEnemies(levelGenerator.Level); //here we will spawn enemies if we enter to a new game.
             MainHeroController.SetEntryPointAndCamera(levelGenerator.EntryPointRoom.CenterPoint, mainCamera.transform);
+            MainHeroController._curHp = MainHeroController.MaxHealth;
         }
+
 
         yield return new WaitForSeconds(0.01f);//trying a bit of delay
         enemySpawner.SetupPlayerTransform(MainHero.transform);
@@ -91,6 +90,13 @@ public class GameInitializer : MonoBehaviour
         //we setup the managers eventually
         yield return new WaitForSeconds(0.05f);
         SetupManagers(playerInput, levelUpSystem);
+
+        // Subscribe to events
+        MainHeroController.OnHit += uiManager.UpdatePlayerHpBar;
+        MainHeroController.OnParry += uiManager.SetDamageMultiplierTxt;
+        uiManager.AddSubscribersToPlayerDeath(MainHeroController);
+        MainHeroController.TakeDamage(0); //so we get a reset for the health
+
     }
 
     private void SetupEnemiesReferences()

@@ -1,5 +1,6 @@
 using Interfaces;
 using PlayerStates;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -84,6 +85,8 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
         _blockAction = _controls.Player.Block;
     }
 
+
+
     private void OnEnable()
     {
         _controls.Enable();
@@ -100,7 +103,6 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
     {
         _currentState = new IdleState(this, cameraTransform);
         _currentState.EnterState();
-        TakeDamage(0); //just to reset these things
         //hen's logic
         if (DataPersistenceManager.instance.GameData.PlayerPosition != Vector3.zero)
         {
