@@ -52,5 +52,10 @@ namespace Managers
                 OnPauseClose?.Invoke();
             }
         }
+
+        public void SetupPlayerScripts(PlayerInput playerInput)
+        {
+            this.playerInput = playerInput;
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -43,6 +44,7 @@ public class DungeonLevelGenerator : MonoBehaviour
 
     [Header("Spawners")]
     [SerializeField] private RandomEnemySpawner enemySpawner;
+    [SerializeField] private GameInitializer gameInitializer;
 
     public int seed;
     private bool useRandomSeed = true;
@@ -66,13 +68,17 @@ public class DungeonLevelGenerator : MonoBehaviour
     private Transform wallParent;
 
     //local objects
-    private Room currentEntryObject;
-    GameData gameData;
+    private Room currentEntryRoom;
+    private GameData gameData;
+
+    //player references
+    public GameObject characterObject;
+    public PlayerController characterController;
+
 
     //properties
-    public Room EntryPoint { get { return currentEntryObject; } } //the player will access it - and spawn on top of it
-    public int Level { get { return level; } }  
-    public List<Room> ListOfRooms { get { return listOfRooms; } }
+    public Room EntryPointRoom { get { return currentEntryRoom; } } //the player will access it - and spawn on top of it
+    public int Level { get { return level; } }
 
     private void Start()
     {
@@ -81,10 +87,10 @@ public class DungeonLevelGenerator : MonoBehaviour
         {
             seed = gameData.currentDungeonSeed;
             useRandomSeed = gameData.useRandomSeed;
-            level = gameData.level;
+            level = gameData.dungeonLevel;
             Debug.Log("Loaded seed: " + gameData.currentDungeonSeed);
             Debug.Log("Loaded useRandomSeed: " + gameData.useRandomSeed);
-            Debug.Log("Loaded level: " + gameData.level);
+            Debug.Log("Loaded level: " + gameData.dungeonLevel);
         }
         else
         {
@@ -94,6 +100,17 @@ public class DungeonLevelGenerator : MonoBehaviour
         GenerateLevelWithSeed();
 
         NextRoom.OnEnteringNextLevel += HandleEnteringNextLevel;
+
+
+        StartCoroutine(SetupAllEnemiesReferences());
+    }
+
+    private IEnumerator SetupAllEnemiesReferences()
+    {
+        yield return new WaitForEndOfFrame();
+        characterObject = gameInitializer.MainHero;
+
+        enemySpawner.InitializeEnemyReferences();
     }
 
     private void OnDestroy()
@@ -104,7 +121,7 @@ public class DungeonLevelGenerator : MonoBehaviour
     private void HandleEnteringNextLevel()
     {
         level++;
-        DataPersistenceManager.instance.GameData.level = level; // get the level saved.
+        DataPersistenceManager.instance.GameData.dungeonLevel = level; // get the level saved.
         useRandomSeed = true;
         seed = random.Range(int.MinValue, int.MaxValue); // get new seed
         DataPersistenceManager.instance.GameData.currentDungeonSeed = seed;
@@ -113,38 +130,33 @@ public class DungeonLevelGenerator : MonoBehaviour
         GenerateLevel();
 
         // update the hero's position to the new entry point
-        GameObject hero = GameObject.FindGameObjectWithTag("Player");
-        if (hero != null)
-        {
-            MainHero mainHero = hero.GetComponent<MainHero>();
-            if (mainHero != null)
-            {
-                mainHero.SetEntryPoint(EntryPoint.CenterPoint);
-            }
-        }
+        characterObject.transform.position = new Vector3(currentEntryRoom.CenterPoint.x, characterObject.transform.position.y, currentEntryRoom.CenterPoint.x + 2);
 
+        List<Room> newListOfRooms = new List<Room>(listOfRooms);
+        newListOfRooms.Remove(EntryPointRoom);
+        enemySpawner.SetListOfRooms(newListOfRooms, EntryPointRoom);
         enemySpawner.SpawnEnemies(level); // here we will spawn them enemieessss only once we enter a new wave tho.
     }
 
     public void GenerateLevel()
     {
-        ClearWorldInGame();
-        GenerateRandomLevelValues();
-        spaceDivider = new SpaceDivider(levelWidth, levelLength, levelIterations, maxRoomWidth, maxRoomLength);
-        spaceDivider.GenerateAllSpaces();
+        ClearWorldInGame(); //clear everything previously made
+        GenerateRandomLevelValues(); //get bew random values
+        spaceDivider = new SpaceDivider(levelWidth, levelLength, levelIterations, maxRoomWidth, maxRoomLength);//divide the space
+        spaceDivider.GenerateAllSpaces();//generate them
 
         foreach (SpaceArea space in spaceDivider.SpacesToPrint)
         {
-            GenerateRoom(space);
+            GenerateRoom(space); //generate new rooms for each space
         }
 
-        roomConnector = new RoomConnector(listOfRooms);
+        roomConnector = new RoomConnector(listOfRooms);//create a room connector
 
-        CreatePlanesForSpaces();
-        CreatePlanesForRooms();
-        CreatePlanesForHallways(roomConnector);
+        CreatePlanesForSpaces();//initialize meshes
+        CreatePlanesForRooms();//same here
+        CreatePlanesForHallways(roomConnector);//hallways, corridors w/e
 
-        wallsInitializer = new WallsInitializer();
+        wallsInitializer = new WallsInitializer();//create walls
         foreach (Room room in listOfRooms)
         {
             wallsInitializer.SetupWallsForRoom(room, 1f);
@@ -168,6 +180,10 @@ public class DungeonLevelGenerator : MonoBehaviour
             }
         }
 
+        //set the enemy spawner's list of rooms
+        List<Room> newListOfRooms = new List<Room>(listOfRooms);
+        newListOfRooms.Remove(EntryPointRoom);
+        enemySpawner.SetListOfRooms(newListOfRooms, EntryPointRoom);
         DeclareStartingAndExitRooms();
     }
 
@@ -402,7 +418,7 @@ public class DungeonLevelGenerator : MonoBehaviour
         exitRoom = allRooms[randomExitRoomIndex];
 
         // Set the current entry object to the selected entry room
-        currentEntryObject = entryRoom;
+        currentEntryRoom = entryRoom;
 
         // now we will decide where to place the entry point and exit point. both will be in the middle of the room
         Instantiate(entryPoint, new Vector3(entryRoom.CenterPoint.x, 1f, entryRoom.CenterPoint.y), Quaternion.identity, roomsParent);
@@ -533,21 +549,49 @@ public class DungeonLevelGenerator : MonoBehaviour
         }
 
         GenerateLevel();
+        LoadValues();
 
-        DataPersistenceManager.instance.GameData.currentDungeonSeed = seed;
-        DataPersistenceManager.instance.GameData.useRandomSeed = useRandomSeed;
-        DataPersistenceManager.instance.GameData.level = level;
-        Debug.Log("Saved seed: " + seed);
-        Debug.Log("Saved useRandomSeed: " + useRandomSeed);
-        Debug.Log("Saved level: " + level);
     }
 
     private void OnApplicationQuit()
     {
+        SaveValues();
+    }
+
+    private void SaveValues()
+    {
+        DataPersistenceManager.instance.GameData.PlayerPosition = new Vector3(currentEntryRoom.CenterPoint.x, 1, currentEntryRoom.CenterPoint.y + 2);
+        if (characterController != null && characterController.IsDead)
+        {
+            Debug.LogWarning("Game not saved — player is dead.");
+            return;
+        }
+
+        enemySpawner.SaveEnemyPositions();
+
+        // Save player state
+        DataPersistenceManager.instance.GameData.playerCurrentHealth = characterController._curHp;
+        DataPersistenceManager.instance.GameData.playerCurrentXp = characterController.LevelUpSystem.CurXp;
+        DataPersistenceManager.instance.GameData.playerLevel = characterController.LevelUpSystem.CurrentLevel;
+        
+
+        DataPersistenceManager.instance.SaveGame();
         DataPersistenceManager.instance.GameData.currentDungeonSeed = seed;
         DataPersistenceManager.instance.GameData.useRandomSeed = false;
-        DataPersistenceManager.instance.GameData.level = level;
-        Debug.Log("Saved seed on quit: " + DataPersistenceManager.instance.GameData.currentDungeonSeed);
-        Debug.Log("Saved level on quit: " + DataPersistenceManager.instance.GameData.level);
+        DataPersistenceManager.instance.GameData.dungeonLevel = level;
+        DataPersistenceManager.instance.GameData.PlayerPosition = characterObject.transform.position;
+    }
+
+    private void LoadValues()
+    {
+        DataPersistenceManager.instance.GameData.currentDungeonSeed = seed;
+        DataPersistenceManager.instance.GameData.useRandomSeed = useRandomSeed;
+        DataPersistenceManager.instance.GameData.dungeonLevel = level;
+
+        // Load player state
+        characterController._curHp = DataPersistenceManager.instance.GameData.playerCurrentHealth;
+        characterController.LevelUpSystem.CurXp = DataPersistenceManager.instance.GameData.playerCurrentXp;
+        characterController.LevelUpSystem.CurrentLevel = DataPersistenceManager.instance.GameData.playerLevel;
+        characterController.transform.position = DataPersistenceManager.instance.GameData.PlayerPosition;
     }
 }

@@ -9,6 +9,8 @@ namespace UI
 
         public void UpdateHealthBar(float curHp, float maxHp)
         {
+            Debug.Log(curHp);
+
             if (maxHp == 0f) return;
 
             if (curHp < 0f)

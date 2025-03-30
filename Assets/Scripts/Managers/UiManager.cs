@@ -33,12 +33,6 @@ namespace Managers
         [SerializeField] private TextMeshProUGUI curXpTxt;
         [SerializeField] private TextMeshProUGUI xpToNextLevelTxt;
 
-        private void OnEnable()
-        {
-            pauseManager.OnPauseEnter += OpenPauseMenu;
-            pauseManager.OnPauseClose += ClosePauseMenu;
-            levelUpSystem.OnLevelUp += SetLevelText;
-        }
 
         private void OnDisable()
         {
@@ -81,7 +75,7 @@ namespace Managers
             xpToNextLevelTxt.text = levelUpSystem.XpToNextLevel.ToString("F0");
         }
 
-        private void SetLevelText(int level)
+        public void SetLevelText(int level)
         {
             levelText.text = level.ToString("D2");
         }
@@ -90,5 +84,11 @@ namespace Managers
         {
             damageMultiplier.text = multiplier.ToString("F2");
         }
+
+        public void SetupPlayerScripts(LevelUpSystem levelUpSystem)
+        {
+            this.levelUpSystem = levelUpSystem;
+        }
+
     }
 }
