@@ -56,6 +56,11 @@ public class GameInitializer : MonoBehaviour
         levelGenerator.characterObject = MainHero;
         levelGenerator.characterController = MainHeroController;
 
+        // Load player state
+        MainHeroController._curHp = DataPersistenceManager.instance.GameData.playerCurrentHealth;
+        MainHeroController.LevelUpSystem.CurXp = DataPersistenceManager.instance.GameData.playerCurrentXp;
+        MainHeroController.LevelUpSystem.CurrentLevel = DataPersistenceManager.instance.GameData.playerLevel;
+
         //here we will set the camera's following to the new hero's transform
         cinemachineFollowCamera.Follow = MainHero.transform;
 
@@ -104,5 +109,14 @@ public class GameInitializer : MonoBehaviour
         gameManager.SetupEvents();
 
         playerInput.actions["Pause"].performed += pausedManager.OnPause;
+    }
+
+    private void OnApplicationQuit()
+    {
+        // Save player state
+        DataPersistenceManager.instance.GameData.playerCurrentHealth = MainHeroController._curHp;
+        DataPersistenceManager.instance.GameData.playerCurrentXp = MainHeroController.LevelUpSystem.CurXp;
+        DataPersistenceManager.instance.GameData.playerLevel = MainHeroController.LevelUpSystem.CurrentLevel;
+
     }
 }

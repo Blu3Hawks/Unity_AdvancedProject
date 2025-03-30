@@ -244,7 +244,6 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
             transform.position = entryPointPosition;
         }
         _curHp = DataPersistenceManager.instance.GameData.playerCurrentHealth;
-        Debug.Log(DataPersistenceManager.instance.GameData.playerCurrentHealth+ ", " + _curHp);
         levelUpSystem.CurXp = DataPersistenceManager.instance.GameData.playerCurrentXp;
         levelUpSystem.CurrentLevel = DataPersistenceManager.instance.GameData.playerLevel;
     }

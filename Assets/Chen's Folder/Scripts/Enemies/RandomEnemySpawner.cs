@@ -197,58 +197,57 @@ public class RandomEnemySpawner : MonoBehaviour
     public void SaveEnemyPositions()
     {
         GameData gameData = DataPersistenceManager.instance.GameData;
-        gameData.crusherSkeletonPositions.Clear();
-        gameData.warriorSkeletonPositions.Clear();
-        gameData.crusherPatrolPoints1.Clear();
-        gameData.crusherPatrolPoints2.Clear();
-        gameData.warriorPatrolPoints1.Clear();
-        gameData.warriorPatrolPoints2.Clear();
+        DataPersistenceManager.instance.GameData.crusherSkeletonPositions.Clear();
+        DataPersistenceManager.instance.GameData.warriorSkeletonPositions.Clear();
+        DataPersistenceManager.instance.GameData.crusherPatrolPoints1.Clear();
+        DataPersistenceManager.instance.GameData.crusherPatrolPoints2.Clear();
+        DataPersistenceManager.instance.GameData.warriorPatrolPoints1.Clear();
+        DataPersistenceManager.instance.GameData.warriorPatrolPoints2.Clear();
 
         foreach (GameObject enemy in spawnedCrusherEnemies)
         {
-            gameData.crusherSkeletonPositions.Add(enemy.transform.position);
+            DataPersistenceManager.instance.GameData.crusherSkeletonPositions.Add(enemy.transform.position);
         }
 
         foreach (GameObject enemy in spawnedWarriorEnemies)
         {
-            gameData.warriorSkeletonPositions.Add(enemy.transform.position);
+            DataPersistenceManager.instance.GameData.warriorSkeletonPositions.Add(enemy.transform.position);
         }
 
-        gameData.crusherPatrolPoints1.AddRange(crusherPatrolPoints1);
-        gameData.crusherPatrolPoints2.AddRange(crusherPatrolPoints2);
-        gameData.warriorPatrolPoints1.AddRange(warriorPatrolPoints1);
-        gameData.warriorPatrolPoints2.AddRange(warriorPatrolPoints2);
+        DataPersistenceManager.instance.GameData.crusherPatrolPoints1.AddRange(crusherPatrolPoints1);
+        DataPersistenceManager.instance.GameData.crusherPatrolPoints2.AddRange(crusherPatrolPoints2);
+        DataPersistenceManager.instance.GameData.warriorPatrolPoints1.AddRange(warriorPatrolPoints1);
+        DataPersistenceManager.instance.GameData.warriorPatrolPoints2.AddRange(warriorPatrolPoints2);
 
         DataPersistenceManager.instance.SaveGame();
     }
 
     public void LoadEnemyPositions()
     {
-        GameData gameData = DataPersistenceManager.instance.GameData;
 
-        for (int i = 0; i < gameData.crusherSkeletonPositions.Count; i++)
+        for (int i = 0; i < DataPersistenceManager.instance.GameData.crusherSkeletonPositions.Count; i++)
         {
-            GameObject enemy = Instantiate(crusherSkeleton.prefab, gameData.crusherSkeletonPositions[i], Quaternion.identity);
+            GameObject enemy = Instantiate(crusherSkeleton.prefab, DataPersistenceManager.instance.GameData.crusherSkeletonPositions[i], Quaternion.identity);
             spawnedCrusherEnemies.Add(enemy);
             ListOfEnemies.Add(enemy.GetComponent<Enemy>());
 
             // Set patrol points
-            Vector3 patrolPoint1 = gameData.crusherPatrolPoints1[i];
-            Vector3 patrolPoint2 = gameData.crusherPatrolPoints2[i];
+            Vector3 patrolPoint1 = DataPersistenceManager.instance.GameData.crusherPatrolPoints1[i];
+            Vector3 patrolPoint2 = DataPersistenceManager.instance.GameData.crusherPatrolPoints2[i];
             EnemyPatrolState patrolState = new EnemyPatrolState(enemy.GetComponent<Enemy>());
             patrolState.SetPatrolPoints(patrolPoint1, patrolPoint2);
             enemy.GetComponent<Enemy>().TransitionToState(patrolState);
         }
 
-        for (int i = 0; i < gameData.warriorSkeletonPositions.Count; i++)
+        for (int i = 0; i < DataPersistenceManager.instance.GameData.warriorSkeletonPositions.Count; i++)
         {
-            GameObject enemy = Instantiate(warriorSkeleton.prefab, gameData.warriorSkeletonPositions[i], Quaternion.identity);
+            GameObject enemy = Instantiate(warriorSkeleton.prefab, DataPersistenceManager.instance.GameData.warriorSkeletonPositions[i], Quaternion.identity);
             spawnedWarriorEnemies.Add(enemy);
             ListOfEnemies.Add(enemy.GetComponent<Enemy>());
 
             // Set patrol points
-            Vector3 patrolPoint1 = gameData.warriorPatrolPoints1[i];
-            Vector3 patrolPoint2 = gameData.warriorPatrolPoints2[i];
+            Vector3 patrolPoint1 = DataPersistenceManager.instance.GameData.warriorPatrolPoints1[i];
+            Vector3 patrolPoint2 = DataPersistenceManager.instance.GameData.warriorPatrolPoints2[i];
             EnemyPatrolState patrolState = new EnemyPatrolState(enemy.GetComponent<Enemy>());
             patrolState.SetPatrolPoints(patrolPoint1, patrolPoint2);
             enemy.GetComponent<Enemy>().TransitionToState(patrolState);
