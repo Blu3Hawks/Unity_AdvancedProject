@@ -1,57 +1,59 @@
-using System.Collections;
-using System.Collections.Generic;
+using Chen_s_Folder.Scripts.Save___Load.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SaveSlot : MonoBehaviour
+namespace Chen_s_Folder.Scripts.Main_Menu
 {
-    [Header("Profile")]
-    [SerializeField] private string profileId;
-
-    [Header("Content")]
-    [SerializeField] private GameObject hasDataContent;
-    [SerializeField] private GameObject noDataContent;
-
-    [SerializeField] private TextMeshProUGUI nameText;
-    [Header("Clear Data Button")]
-    [SerializeField] private Button clearButton;
-    public bool hasData { get; private set; } = false;
-
-    private Button saveSlotButton;
-
-
-    private void Awake()
+    public class SaveSlot : MonoBehaviour
     {
-        saveSlotButton = GetComponent<Button>();
-    }
-    public void SetData(GameData data)
-    {
-        if (data == null)
+        [Header("Profile")]
+        [SerializeField] private string profileId;
+
+        [Header("Content")]
+        [SerializeField] private GameObject hasDataContent;
+        [SerializeField] private GameObject noDataContent;
+
+        [SerializeField] private TextMeshProUGUI nameText;
+        [Header("Clear Data Button")]
+        [SerializeField] private Button clearButton;
+        public bool HasData { get; private set; } = false;
+
+        private Button _saveSlotButton;
+
+
+        private void Awake()
         {
-            hasData = false;
-            noDataContent.SetActive(true);
-            hasDataContent.SetActive(false);
-            clearButton.gameObject.SetActive(false);
+            _saveSlotButton = GetComponent<Button>();
         }
-        else
+        public void SetData(GameData data)
         {
-            hasData = true;
-            noDataContent.SetActive(false);
-            hasDataContent.SetActive(true);
-            clearButton.gameObject.SetActive(true);
+            if (data == null)
+            {
+                HasData = false;
+                noDataContent.SetActive(true);
+                hasDataContent.SetActive(false);
+                clearButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                HasData = true;
+                noDataContent.SetActive(false);
+                hasDataContent.SetActive(true);
+                clearButton.gameObject.SetActive(true);
+            }
+
         }
 
-    }
+        public string GetProfileId()
+        {
+            return this.profileId;
+        }
 
-    public string GetProfileId()
-    {
-        return this.profileId;
-    }
-
-    public void SetInteractable(bool interactable)
-    {
-        saveSlotButton.interactable = interactable;
-        clearButton.interactable = interactable;
+        public void SetInteractable(bool interactable)
+        {
+            _saveSlotButton.interactable = interactable;
+            clearButton.interactable = interactable;
+        }
     }
 }

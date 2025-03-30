@@ -1,18 +1,19 @@
-using Managers;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class NextRoom : MonoBehaviour
+namespace Chen_s_Folder.Scripts.Load_Next_Scenes
 {
-    public delegate void EnteringNextLevelHandler();
-    public static event EnteringNextLevelHandler OnEnteringNextLevel;
-
-    private void OnTriggerEnter(Collider other)
+    public class NextRoom : MonoBehaviour
     {
-        if (other.CompareTag("Player"))
+        public delegate void EnteringNextLevelHandler();
+        public static event EnteringNextLevelHandler OnEnteringNextLevel;
+
+        private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("new level !");
-            OnEnteringNextLevel?.Invoke();
+            if (other.CompareTag("Player"))
+            {
+                Debug.Log("new level !");
+                OnEnteringNextLevel?.Invoke();
+            }
         }
     }
 }

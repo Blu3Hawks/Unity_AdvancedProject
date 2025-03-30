@@ -1,13 +1,15 @@
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[CreateAssetMenu(fileName = "Character Data", menuName = "Scriptable Objects/Character Data", order = 1)]
-public class CharacterData : ScriptableObject
+namespace Chen_s_Folder.Scripts.Scriptables
 {
-    public GameObject characterPrefab;
-    public PlayerController playerController;
-    public LevelUpSystem levelUpSystem;
-    public PlayerInput playerInput;
+    [CreateAssetMenu(fileName = "Character Data", menuName = "Scriptable Objects/Character Data", order = 1)]
+    public class CharacterData : ScriptableObject
+    {
+        public GameObject characterPrefab;
+        public PlayerController playerController;
+        public LevelUpSystem levelUpSystem;
+        public PlayerInput playerInput;
 
+    }
 }

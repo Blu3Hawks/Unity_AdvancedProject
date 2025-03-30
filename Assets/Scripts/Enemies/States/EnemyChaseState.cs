@@ -44,9 +44,7 @@ namespace Enemies.States
 
         public override void ExitState()
         {
-            if (!Enemy.animator) return;
             
-            //Enemy.animator.SetBool(IsRunning, false);
         }
     }
 }

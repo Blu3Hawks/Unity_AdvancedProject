@@ -1,10 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Chen_s_Folder.Scripts.Save___Load.Data;
 
-public interface IDataPersistence
+namespace Chen_s_Folder.Scripts.Save___Load
 {
-    void LoadData(GameData data);
-    void SaveData(GameData data);
+    public interface IDataPersistence
+    {
+        void LoadData(GameData data);
+        void SaveData(GameData data);
 
+    }
 }

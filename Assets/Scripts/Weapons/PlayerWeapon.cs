@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Weapons
 {
-    public class PlayerWeapon : Weapons.Weapon
+    public class PlayerWeapon : Weapon
     {
         [Header("References")] 
         [SerializeField] private PlayerController player;

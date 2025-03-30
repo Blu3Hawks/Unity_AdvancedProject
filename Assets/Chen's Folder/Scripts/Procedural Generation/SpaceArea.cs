@@ -1,26 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SpaceArea
+namespace Chen_s_Folder.Scripts.Procedural_Generation
 {
-    public Vector2Int bottomLeftSpaceCorner;
-    public Vector2Int topRightSpaceCorner;
-
-    public Vector2Int bottomRightSpaceCorner;
-    public Vector2Int topLeftSpaceCorner;
-
-    public int Width { get => (topRightSpaceCorner.x - bottomLeftSpaceCorner.x); }
-    public int Length { get => (topRightSpaceCorner.y - bottomLeftSpaceCorner.y); }
-
-
-    // a public constructor for the points of the space - a square
-    public SpaceArea(Vector2Int bottomLeftCorner, Vector2Int topRightCorner)
+    public class SpaceArea
     {
-        bottomLeftSpaceCorner = bottomLeftCorner;
-        topRightSpaceCorner = topRightCorner;
+        public Vector2Int BottomLeftSpaceCorner;
+        public Vector2Int TopRightSpaceCorner;
 
-        bottomRightSpaceCorner = new Vector2Int(topRightCorner.x, bottomLeftCorner.y);
-        topLeftSpaceCorner = new Vector2Int(bottomLeftCorner.x, topRightCorner.y);
+        public Vector2Int BottomRightSpaceCorner;
+        public Vector2Int TopLeftSpaceCorner;
+
+        public int Width { get => (TopRightSpaceCorner.x - BottomLeftSpaceCorner.x); }
+        public int Length { get => (TopRightSpaceCorner.y - BottomLeftSpaceCorner.y); }
+
+
+        // a public constructor for the points of the space - a square
+        public SpaceArea(Vector2Int bottomLeftCorner, Vector2Int topRightCorner)
+        {
+            BottomLeftSpaceCorner = bottomLeftCorner;
+            TopRightSpaceCorner = topRightCorner;
+
+            BottomRightSpaceCorner = new Vector2Int(topRightCorner.x, bottomLeftCorner.y);
+            TopLeftSpaceCorner = new Vector2Int(bottomLeftCorner.x, topRightCorner.y);
+        }
     }
 }
