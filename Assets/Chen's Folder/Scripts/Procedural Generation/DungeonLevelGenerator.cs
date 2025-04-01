@@ -201,10 +201,12 @@ public class DungeonLevelGenerator : MonoBehaviour
         }
 
         //set the enemy spawner's list of rooms
-        List<Room> newListOfRooms = new List<Room>(listOfRooms);
-        newListOfRooms.Remove(EntryPointRoom);
-        enemySpawner.SetListOfRooms(newListOfRooms, EntryPointRoom);
+
         DeclareStartingAndExitRooms();
+
+        List<Room> newListOfRooms = new List<Room>(listOfRooms);
+        newListOfRooms.Remove(currentEntryRoom);
+        enemySpawner.SetListOfRooms(newListOfRooms, currentEntryRoom);
     }
 
     public void SetUseRandomSeed(bool useRandomSeed)

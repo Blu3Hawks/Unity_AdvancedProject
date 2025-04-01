@@ -100,6 +100,7 @@ namespace Managers
         public void SetupPlayerScripts(LevelUpSystem levelUpSystem)
         {
             this.levelUpSystem = levelUpSystem;
+            levelUpSystem.OnLevelUp += SetLevelText;
         }
 
         public void AddSubscribersToPlayerDeath(PlayerController player)
