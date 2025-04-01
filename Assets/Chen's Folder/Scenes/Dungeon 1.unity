@@ -1171,7 +1171,7 @@ MonoBehaviour:
   exitPoint: {fileID: 9016449047566717179, guid: 1082a2e6a44320845af3bbb18091da11, type: 3}
   enemySpawner: {fileID: 964373034}
   gameInitializer: {fileID: 964373032}
-  seed: 19
+  seed: 26
   characterObject: {fileID: 0}
   characterController: {fileID: 0}
 --- !u!4 &1642061760

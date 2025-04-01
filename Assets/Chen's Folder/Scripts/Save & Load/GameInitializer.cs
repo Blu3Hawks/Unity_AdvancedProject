@@ -43,7 +43,7 @@ public class GameInitializer : MonoBehaviour
         MainHero = Instantiate(ClonedHeroData.characterPrefab);
         MainHeroController = MainHero.GetComponent<PlayerController>(); //yes yes, I know, get component. The only way I found I swear
         MainHeroController.SetEntryPointAndCamera(levelGenerator.EntryPointRoom.CenterPoint, mainCamera.transform);
-        
+
 
 
         // Get additional components
@@ -100,8 +100,10 @@ public class GameInitializer : MonoBehaviour
 
     }
 
-    private void SetupEnemiesReferences()
+    private IEnumerator SetupEnemiesReferences()
     {
+        while (MainHeroController == null)
+            yield return null;
         foreach (Enemy enemy in enemySpawner.ListOfEnemies)
         {
             enemy.InitializeEnemyReferences(MainHero.transform, mainCamera);
@@ -120,8 +122,9 @@ public class GameInitializer : MonoBehaviour
 
     private IEnumerator InitializeUiManagerEvent(PlayerInput playerInput)
     {
-        while(pausedManager == null)
-        { yield return new WaitForSeconds(0.01f); 
+        while (pausedManager == null)
+        {
+            yield return new WaitForSeconds(0.01f);
         }
         playerInput.actions["Pause"].performed += pausedManager.OnPause;
 

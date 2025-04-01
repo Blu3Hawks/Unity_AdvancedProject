@@ -102,6 +102,7 @@ public class DungeonLevelGenerator : MonoBehaviour
         GenerateLevelWithSeed();
 
         NextRoom.OnEnteringNextLevel += HandleEnteringNextLevel;
+        NextRoom.OnEnteringNextLevel += UpdatePlayerPositionToEntryPoint;
 
 
         StartCoroutine(SetupAllEnemiesReferences());
@@ -112,12 +113,27 @@ public class DungeonLevelGenerator : MonoBehaviour
         yield return new WaitForEndOfFrame();
         characterObject = gameInitializer.MainHero;
 
+
         enemySpawner.InitializeEnemyReferences();
     }
 
     private void OnDestroy()
     {
         NextRoom.OnEnteringNextLevel -= HandleEnteringNextLevel;
+        NextRoom.OnEnteringNextLevel -= UpdatePlayerPositionToEntryPoint;
+    }
+
+    private void UpdatePlayerPositionToEntryPoint()
+    {
+        StartCoroutine(SetPlayerLocation());
+    }
+
+    private IEnumerator SetPlayerLocation()
+    {
+        while (characterObject == null)
+            yield return null;
+        characterObject.transform.position = new Vector3(currentEntryRoom.CenterPoint.x, characterObject.transform.position.y, currentEntryRoom.CenterPoint.y + 2);
+
     }
 
     private void HandleEnteringNextLevel()
@@ -138,6 +154,8 @@ public class DungeonLevelGenerator : MonoBehaviour
         newListOfRooms.Remove(EntryPointRoom);
         enemySpawner.SetListOfRooms(newListOfRooms, EntryPointRoom);
         enemySpawner.SpawnEnemies(level); // here we will spawn them enemieessss only once we enter a new wave tho.
+        enemySpawner.InitializeEnemyReferences();
+
     }
 
     public void GenerateLevel()
@@ -421,7 +439,6 @@ public class DungeonLevelGenerator : MonoBehaviour
 
         // Set the current entry object to the selected entry room
         currentEntryRoom = entryRoom;
-
         // now we will decide where to place the entry point and exit point. both will be in the middle of the room
         Instantiate(entryPoint, new Vector3(entryRoom.CenterPoint.x, 1f, entryRoom.CenterPoint.y), Quaternion.identity, roomsParent);
         GameObject exitLevelPoint = Instantiate(exitPoint, new Vector3(exitRoom.CenterPoint.x, 1f, exitRoom.CenterPoint.y), Quaternion.identity, roomsParent);
@@ -602,5 +619,8 @@ public class DungeonLevelGenerator : MonoBehaviour
             useRandomSeed = true;
             level = 0;
         }
+
+
+
     }
 }

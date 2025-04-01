@@ -141,6 +141,7 @@ public class RandomEnemySpawner : MonoBehaviour
 
     public void InitializeEnemyReferences()
     {
+        
         foreach (var enemy in ListOfEnemies)
         {
             enemy.InitializeEnemyReferences(playerTransform, mainCamera);
