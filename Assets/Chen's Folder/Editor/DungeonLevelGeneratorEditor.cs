@@ -13,8 +13,9 @@ public class DungeonLevelGeneratorEditor : Editor
         if (GUILayout.Button("Create New Level"))
         {
             dungeonLevelGenerator.ClearWorldInEditor();
-            dungeonLevelGenerator.seed++; //we will jst add 1 to the seed, I am too tired for that sht
             dungeonLevelGenerator.GenerateLevel();
+            dungeonLevelGenerator.seed++; //we will jst add 1 to the seed, I am too tired for that sht
+
         }
     }
 }

@@ -133,7 +133,6 @@ public class DungeonLevelGenerator : MonoBehaviour
         while (characterObject == null)
             yield return null;
         characterObject.transform.position = new Vector3(currentEntryRoom.CenterPoint.x, characterObject.transform.position.y, currentEntryRoom.CenterPoint.y + 2);
-
     }
 
     private void HandleEnteringNextLevel()
