@@ -35,6 +35,7 @@ public class GameData
         PlayerPosition = Vector3.zero;
         dungeonLevel = 1;
         playerCurrentXp = 0f;
+        playerLevel = 1;
 
         crusherSkeletonPositions = new List<Vector3>();
         warriorSkeletonPositions = new List<Vector3>();

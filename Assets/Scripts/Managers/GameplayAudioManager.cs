@@ -19,5 +19,10 @@ namespace Managers
         {
             sfxSource.PlayOneShot(parrySfx);
         }
+        private void Start()
+        {
+            musicSource.clip = soundTrack1;
+            musicSource.Play();
+        }
     }
 }

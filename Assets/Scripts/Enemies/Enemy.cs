@@ -39,6 +39,7 @@ namespace Enemies
         public float xpModifier = 1f;
 
         private float _curHp;
+        private bool _isDead = false;
 
         private EnemyState _currentState;
 
@@ -115,8 +116,9 @@ namespace Enemies
 
             healthBar.UpdateHealthBar(_curHp, maxHp);
 
-            if (_curHp <= 0)
+            if (_curHp <= 0 && !_isDead)
             {
+                _isDead = true;
                 _curHp = 0;
                 OnEnemyDeath?.Invoke(xp * xpModifier);
                 TransitionToState(new EnemyDeathState(this));

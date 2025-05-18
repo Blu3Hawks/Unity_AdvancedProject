@@ -28,18 +28,17 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
+        if (Instance != null && Instance != this)
         {
-            Debug.LogError("there's already an instance");
+            Debug.LogWarning("Duplicate DataPersistenceManager detected. Destroying this instance.");
             Destroy(this.gameObject);
             return;
         }
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
-
         if (disableDataPersistence)
         {
-            Debug.LogWarning("Data Persistnce Manager is disabled !");
+            Debug.LogWarning("Data Persistence Manager is disabled!");
         }
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName, useEncryption);
         InitializeSelectedProfileId();

@@ -32,6 +32,10 @@ public class GameInitializer : MonoBehaviour
     {
         ClonedHeroData = Instantiate(mainHeroData);
         StartCoroutine(InitializeGameDelayed());
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
     }
 
     private IEnumerator InitializeGameDelayed()
@@ -87,7 +91,7 @@ public class GameInitializer : MonoBehaviour
         enemySpawner.SetupPlayerTransform(MainHero.transform);
         enemySpawner.LoadEnemyPositions();
 
-        SetupEnemiesReferences();
+        StartCoroutine(SetupEnemiesReferences());
         //we setup the managers eventually
         yield return new WaitForSeconds(0.05f);
         SetupManagers(playerInput, levelUpSystem);
@@ -127,9 +131,9 @@ public class GameInitializer : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
         playerInput.actions["Pause"].performed += pausedManager.OnPause;
-
-
     }
+
+
     private void OnApplicationQuit()
     {
         // Save player state

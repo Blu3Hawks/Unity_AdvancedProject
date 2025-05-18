@@ -224,6 +224,8 @@ public class PlayerController : MonoBehaviour, IDamageable, IDataPersistence
             _curHp = 0f;
             IsDead = true;
             OnPlayerDeath?.Invoke();
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 

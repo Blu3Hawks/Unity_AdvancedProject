@@ -396,7 +396,7 @@ public class DungeonLevelGenerator : MonoBehaviour
 
         float scaleModifier = 9.15f;
 
-        // check the direction that we will be facing, and scale it properly towards where we're heading
+        // Check the direction that we will be facing, and scale it properly towards where we're heading
         if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
         {
             scale = new Vector3(length / scaleModifier, 1f, hallwayWidth / scaleModifier);
@@ -406,7 +406,7 @@ public class DungeonLevelGenerator : MonoBehaviour
             scale = new Vector3(hallwayWidth / scaleModifier, 1f, length / scaleModifier);
         }
 
-        // instantiate the hallway GameObject
+        // Instantiate the hallway GameObject
         GameObject hallwayObject = Instantiate(hallwayPrefab, position, Quaternion.identity, hallwaysParent);
         hallwayObject.transform.localScale = scale;
         listOfHallwaysObjects.Add(hallwayObject);
@@ -416,6 +416,26 @@ public class DungeonLevelGenerator : MonoBehaviour
         Vector2Int topRightCorner = Vector2Int.RoundToInt(endPoint);
         Hallway newHallway = new Hallway(bottomLeftCorner, topRightCorner);
         listOfHallways.Add(newHallway);
+
+        // Add walls at the corners where the hallway turns
+        AddCornerWalls(startPoint, endPoint);
+    }
+
+    private void AddCornerWalls(Vector2 startPoint, Vector2 endPoint)
+    {
+        if (wallPrefab == null)
+        {
+            Debug.LogError("Wall prefab is not assigned!");
+            return;
+        }
+
+        // Add a wall at the corner where the hallway changes direction
+        Vector2 cornerPoint = new Vector2(endPoint.x, startPoint.y);
+        float yScale = wallPrefab.transform.localScale.y;
+        Vector3 adjustedPosition = new Vector3(cornerPoint.x, yScale / 2, cornerPoint.y);
+
+        GameObject wall = Instantiate(wallPrefab, wallParent);
+        wall.transform.position = adjustedPosition;
     }
 
     // here we are going to add a starting and ending point. So the game will choose a random room, every time, one for entry and one for exit.
@@ -581,7 +601,7 @@ public class DungeonLevelGenerator : MonoBehaviour
         SaveValues();
     }
 
-    private void SaveValues()
+    public void SaveValues()
     {
         DataPersistenceManager.Instance.GameData.PlayerPosition = new Vector3(currentEntryRoom.CenterPoint.x, 1, currentEntryRoom.CenterPoint.y + 2);
         if (characterController != null && characterController.IsDead)
@@ -620,8 +640,5 @@ public class DungeonLevelGenerator : MonoBehaviour
             useRandomSeed = true;
             level = 0;
         }
-
-
-
     }
 }
